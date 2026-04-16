@@ -37,10 +37,19 @@ nav button{
   color:#ffd700;
   background:none;
   cursor:pointer;
-  font-size:14px;
 }
 
-/* SECTION */
+/* LOGIN BOX */
+.login{
+  text-align:center;
+  padding:10px;
+  background:#2c1b10;
+}
+
+.login input{
+  padding:5px;
+}
+
 section{
   display:none;
   padding:15px;
@@ -50,140 +59,41 @@ section{
   display:block;
 }
 
-/* ===== MAP ===== */
+/* MAP */
 .map-container{
   position:relative;
-  width:100%;
 }
-
-.map-bg{
-  width:100%;
-}
-
+.map-bg{ width:100%; }
 svg{
   position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  top:0;left:0;
+  width:100%;height:100%;
 }
-
 .region{
-  fill: transparent;
+  fill:transparent;
   cursor:pointer;
 }
 
-/* ===== JOB ===== */
-.job-wrapper{
-  display:flex;
-  gap:15px;
+/* JOB */
+.job-box{
+  text-align:center;
 }
 
-/* GRID */
-.job-grid{
-  flex:1;
-  display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:10px;
-}
-
-/* CARD */
-.job-card{
-  height:100px;
-  border-radius:10px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid #c9a66b;
-  background-size:cover;
-  background-position:center;
+.spin-btn{
+  padding:12px 20px;
+  background:gold;
+  border:none;
   cursor:pointer;
-}
-
-/* overlay */
-.job-card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-}
-
-/* text */
-.job-card h3{
-  position:absolute;
-  bottom:5px;
-  left:5px;
-  font-size:14px;
-  color:#ffd700;
-  z-index:2;
-}
-
-/* shine */
-.job-card::before{
-  content:"";
-  position:absolute;
-  width:200%;
-  height:100%;
-  background:linear-gradient(120deg,transparent,rgba(255,215,0,0.6),transparent);
-  transform:translateX(-100%);
-}
-
-.job-card:hover::before{
-  animation:shine 1s;
-}
-
-@keyframes shine{
-  to{ transform:translateX(100%); }
-}
-
-/* selected */
-.selected{
-  outline:2px solid gold;
-}
-
-/* PANEL */
-.job-panel{
-  width:220px;
-  background:#2c1b10;
-  padding:10px;
-  border-radius:10px;
-}
-
-.job-panel h2{
   font-size:16px;
 }
 
-.job-panel p{
-  font-size:13px;
+.result{
+  margin-top:20px;
+  font-size:20px;
+  color:#ffd700;
 }
 
-.choose-btn{
-  margin-top:10px;
-  padding:6px;
-  width:100%;
-}
-
-/* ===== MOBILE FIX ===== */
-@media(max-width:768px){
-
-.job-wrapper{
-  flex-direction:column;
-}
-
-.job-grid{
-  grid-template-columns: repeat(2,1fr);
-}
-
-.job-card{
-  height:90px;
-}
-
-.job-panel{
-  width:100%;
-}
-
-}
-
-/* ===== POPUP ===== */
+/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -201,9 +111,7 @@ svg{
   max-width:90%;
 }
 
-.popup img{
-  width:100%;
-}
+.popup img{ width:100%; }
 </style>
 </head>
 
@@ -211,14 +119,21 @@ svg{
 
 <header>CỔ QUỐC KỲ ĐÀM</header>
 
+<!-- LOGIN -->
+<div class="login">
+<input id="username" placeholder="Nhập tên...">
+<button onclick="login()">Đăng nhập</button>
+<span id="userDisplay"></span>
+</div>
+
 <nav>
 <button onclick="show('tongquan')">Tổng quan</button>
 <button onclick="show('bando')">Bản đồ</button>
-<button onclick="show('nghenghiep')">Nghề</button>
-<button onclick="show('luatle')">Luật</button>
+<button onclick="show('nghe')">Nghề</button>
+<button onclick="show('luat')">Luật</button>
 </nav>
 
-<section id="tongquan" class="active">
+<section id="tongquan">
 <h2>Tổng quan</h2>
 <p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
 </section>
@@ -242,32 +157,23 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 </section>
 
-<section id="nghenghiep">
-<h2>Chọn nghề</h2>
+<!-- NGHỀ RANDOM -->
+<section id="nghe">
+<h2>🎲 Quay nghề</h2>
 
-<div class="job-wrapper">
+<div class="job-box">
+<button class="spin-btn" onclick="spinJob()">QUAY NGAY</button>
 
-<div class="job-grid">
-<div class="job-card" style="background-image:url('./images/y.jpg')" onclick="openJob('y',this)"><h3>Y sư</h3></div>
-<div class="job-card" style="background-image:url('./images/t.jpg')" onclick="openJob('t',this)"><h3>Thương nhân</h3></div>
-<div class="job-card" style="background-image:url('./images/n.jpg')" onclick="openJob('n',this)"><h3>Nông dân</h3></div>
-<div class="job-card" style="background-image:url('./images/q.jpg')" onclick="openJob('q',this)"><h3>Quý tộc</h3></div>
-</div>
-
-<div class="job-panel">
-<h2 id="jobTitle">Chọn nghề</h2>
-<p id="jobDesc">Hãy chọn con đường của bạn...</p>
-<button class="choose-btn" onclick="selectJob()">Chọn nghề</button>
-</div>
-
+<div class="result" id="jobResult">Chưa có nghề</div>
 </div>
 </section>
 
-<section id="luatle">
+<section id="luat">
 <h2>Luật lệ</h2>
 <p>Các quy tắc của Cổ Quốc...</p>
 </section>
 
+<!-- POPUP MAP -->
 <div id="popup" class="popup">
 <div class="popup-content">
 <span onclick="closePopup()">X</span>
@@ -277,44 +183,90 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 
 <script>
+
+// ===== ACCOUNT =====
+let currentUser = localStorage.getItem("user");
+
+function login(){
+let name = document.getElementById("username").value;
+if(!name) return alert("Nhập tên!");
+
+localStorage.setItem("user", name);
+currentUser = name;
+
+loadUser();
+}
+
+function loadUser(){
+if(currentUser){
+document.getElementById("userDisplay").innerText = "👤 " + currentUser;
+}
+}
+
+// ===== TAB =====
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
+localStorage.setItem("page", id);
 }
 
+// ===== LOAD =====
+window.onload = function(){
+loadUser();
+
+let page = localStorage.getItem("page") || "tongquan";
+show(page);
+
+// load job theo user
+if(currentUser){
+let job = localStorage.getItem("job_"+currentUser);
+if(job){
+showJobResult(job);
+}
+}
+}
+
+// ===== MAP =====
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
-document.getElementById("popup").style.display="flex";
-document.getElementById("title").innerText=r.dataset.name;
-document.getElementById("img").src="./images/"+r.dataset.img;
+popup.style.display="flex";
+title.innerText=r.dataset.name;
+img.src="./images/"+r.dataset.img;
 }
 });
 
 function closePopup(){
-document.getElementById("popup").style.display="none";
+popup.style.display="none";
 }
 
-let currentJob="";
+// ===== RANDOM JOB =====
+const jobs = [
+{key:"Y sư", desc:"Cứu thế cứu nạn"},
+{key:"Thương nhân", desc:"Buôn bán thiên hạ"},
+{key:"Nông dân", desc:"Nuôi sống quốc gia"},
+{key:"Quý tộc", desc:"Thống trị lãnh đạo"}
+];
 
-function openJob(type,el){
-document.querySelectorAll(".job-card").forEach(c=>c.classList.remove("selected"));
-el.classList.add("selected");
-currentJob=type;
+function spinJob(){
 
-let t="",d="";
-if(type==="y"){t="Y sư";d="Cứu thế cứu nạn";}
-if(type==="t"){t="Thương nhân";d="Buôn bán thiên hạ";}
-if(type==="n"){t="Nông dân";d="Nuôi sống quốc gia";}
-if(type==="q"){t="Quý tộc";d="Thống trị và lãnh đạo";}
+if(!currentUser) return alert("Đăng nhập trước!");
 
-jobTitle.innerText=t;
-jobDesc.innerText=d;
+let roll = Math.floor(Math.random()*jobs.length);
+let job = jobs[roll];
+
+showJobResult(job);
+
+// lưu theo user
+localStorage.setItem("job_"+currentUser, JSON.stringify(job));
 }
 
-function selectJob(){
-if(!currentJob) return alert("Chọn nghề trước!");
-alert("Bạn đã chọn: "+jobTitle.innerText);
+function showJobResult(job){
+if(typeof job === "string") job = JSON.parse(job);
+
+document.getElementById("jobResult").innerHTML =
+"🏆 " + job.key + "<br>" + job.desc;
 }
+
 </script>
 
 </body>
