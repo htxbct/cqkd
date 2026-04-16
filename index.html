@@ -7,135 +7,133 @@
 
 <style>
 body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#1a1a1a;
-  color:#f5e6c8;
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#1a1a1a;
+  color:#f5e6c8;
 }
 
+/* HEADER */
 header{
-  text-align:center;
-  padding:15px;
-  font-size:22px;
-  font-weight:bold;
-  color:#ffd700;
-  background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
+  text-align:center;
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
+  color:#ffd700;
+  background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
 }
 
+/* NAV */
 nav{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  background:#5a3d2b;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  background:#5a3d2b;
 }
 
 nav button{
-  padding:10px;
-  border:none;
-  color:#ffd700;
-  background:none;
-  cursor:pointer;
+  padding:10px;
+  border:none;
+  color:#ffd700;
+  background:none;
+  cursor:pointer;
 }
 
 section{
-  display:none;
-  padding:15px;
+  display:none;
+  padding:15px;
 }
 .active{ display:block; }
 
 /* MAP */
-.map-container{
-  position:relative;
-  aspect-ratio:1200/650;
-}
-
-.map-bg{
-  width:100%;
-  height:100%;
-  object-fit:fill;
-}
+.map-container{ position:relative; }
+.map-bg{ width:100%; }
 
 svg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
 }
 
 .region{
-  fill:transparent;
-  cursor:pointer;
+  fill:transparent;
+  cursor:pointer;
 }
 
-/* POPUP */
+/* ===== POPUP ===== */
 .popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 
 .popup-inner{
-  display:flex;
-  gap:15px;
-  max-width:900px;
-  width:95%;
+  display:flex;
+  gap:15px;
+  max-width:900px;
+  width:95%;
 }
 
+/* MAP DETAIL */
 .map-detail{
-  position:relative;
-  flex:1;
-  aspect-ratio:1200/650;
+  position:relative;
+  flex:1;
 }
 
 .map-detail img{
-  width:100%;
-  height:100%;
-  object-fit:fill;
-  border-radius:10px;
+  width:100%;
+  border-radius:10px;
+  display:block;
 }
 
+/* SVG chuẩn scale */
 .map-detail svg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:auto;
 }
 
+/* vùng chi tiết */
 .sub-region{
-  fill:transparent;
-  cursor:pointer;
+  fill:transparent;
+  cursor:pointer;
 }
 
 .sub-region:hover{
-  fill:rgba(255,215,0,0.35);
+  fill:rgba(255,215,0,0.35);
 }
 
+/* INFO */
 .info-box{
-  width:250px;
-  background:#fff8e7;
-  color:#000;
-  padding:10px;
-  border-radius:10px;
+  width:250px;
+  background:#fff8e7;
+  color:#000;
+  padding:10px;
+  border-radius:10px;
 }
 
 .close{
-  position:absolute;
-  top:10px;
-  right:20px;
-  font-size:24px;
-  cursor:pointer;
+  position:absolute;
+  top:10px;
+  right:20px;
+  font-size:24px;
+  cursor:pointer;
 }
 
+/* MOBILE */
 @media(max-width:768px){
-  .popup-inner{
-    flex-direction:column;
-  }
-  .info-box{
-    width:100%;
-  }
+  .popup-inner{
+    flex-direction:column;
+  }
+  .info-box{
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -159,12 +157,17 @@ svg{
 <div class="map-container">
 <img src="./images/bandochinh.jpg" class="map-bg">
 
-<svg viewBox="0 0 1200 650" preserveAspectRatio="none">
-<path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z" class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
-<path d="M350,50 L850,50 L800,200 L400,200 Z" class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
-<path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z" class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
-<path d="M350,400 L800,400 L850,600 L300,600 Z" class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
-<ellipse cx="600" cy="300" rx="120" ry="90" class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
+<svg viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid meet">
+<path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
+class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
+<path d="M350,50 L850,50 L800,200 L400,200 Z"
+class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
+<path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
+class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
+<path d="M350,400 L800,400 L850,600 L300,600 Z"
+class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
+<ellipse cx="600" cy="300" rx="120" ry="90"
+class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </svg>
 </div>
 </section>
@@ -174,14 +177,16 @@ svg{
 <p>Chọn nghề để xem mô tả...</p>
 </section>
 
+<!-- POPUP -->
 <div id="popup" class="popup">
+
 <span class="close" onclick="closePopup()">X</span>
 
 <div class="popup-inner">
 
 <div class="map-detail">
 <img id="detailImg">
-<svg id="detailSVG" preserveAspectRatio="none"></svg>
+<svg id="detailSVG" viewBox="0 0 1500 800" preserveAspectRatio="xMidYMid meet"></svg>
 </div>
 
 <div class="info-box">
@@ -194,18 +199,22 @@ svg{
 
 <script>
 
+// TAB
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
+// INFO
 function showInfo(name, desc){
 infoTitle.innerText = name;
 infoDesc.innerText = desc;
 }
 
-/* ===== GIỮ NGUYÊN 100% DATA CỦA BẠN ===== */
+// DATA
 const maps = {
+
+/* ===== GIỮ NGUYÊN 100% DATA CỦA BẠN ===== */
 dongchau:[
 ["820,300 900,270 1020,300 1150,350 1150,500 1000,520 850,480","Hải Cảng","Trung tâm giao thương đường biển"],
 ["720,360 830,360 880,420 840,500 720,480","Pháo Đài Biển","Công trình phòng thủ ven biển"],
@@ -279,8 +288,10 @@ kinhquoc:[
 ["400,450 1000,450 1000,600 400,600","Sông Hằng","Dòng sông"],
 ["350,450 500,450 500,550 350,550","Võ Doanh Sư","Quân sự"]
 ]
+
 };
 
+// CLICK MAP CHÍNH (DUY NHẤT 1 LẦN)
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
 
@@ -290,18 +301,15 @@ let key = r.dataset.img.replace(".jpg","");
 detailImg.src="./images/"+r.dataset.img;
 detailSVG.innerHTML="";
 
-detailImg.onload = () => {
-  const w = detailImg.naturalWidth;
-  const h = detailImg.naturalHeight;
-  detailSVG.setAttribute("viewBox", `0 0 ${w} ${h}`);
-};
-
+// load vùng con
 if(maps[key]){
 maps[key].forEach(v=>{
 let poly = document.createElementNS("http://www.w3.org/2000/svg","polygon");
 poly.setAttribute("points",v[0]);
 poly.setAttribute("class","sub-region");
+
 poly.onclick=()=>showInfo(v[1],v[2]);
+
 detailSVG.appendChild(poly);
 });
 }
