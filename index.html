@@ -39,7 +39,7 @@ nav button{
   cursor:pointer;
 }
 
-/* LOGIN BOX */
+/* LOGIN */
 .login{
   text-align:center;
   padding:10px;
@@ -48,13 +48,14 @@ nav button{
 
 .login input{
   padding:5px;
+  margin:3px;
 }
 
+/* SECTION */
 section{
   display:none;
   padding:15px;
 }
-
 .active{
   display:block;
 }
@@ -64,19 +65,37 @@ section{
   position:relative;
 }
 .map-bg{ width:100%; }
+
 svg{
   position:absolute;
   top:0;left:0;
   width:100%;height:100%;
 }
+
 .region{
   fill:transparent;
   cursor:pointer;
 }
 
 /* JOB */
-.job-box{
+.job-list{
+  display:flex;
+  justify-content:space-around;
+  margin-bottom:20px;
+}
+
+.job-item{
+  padding:10px;
+  border:2px solid #555;
+  border-radius:8px;
+  width:22%;
   text-align:center;
+  transition:0.3s;
+}
+
+.active-job{
+  border:2px solid gold;
+  box-shadow:0 0 20px gold;
 }
 
 .spin-btn{
@@ -84,13 +103,6 @@ svg{
   background:gold;
   border:none;
   cursor:pointer;
-  font-size:16px;
-}
-
-.result{
-  margin-top:20px;
-  font-size:20px;
-  color:#ffd700;
 }
 
 /* POPUP */
@@ -111,7 +123,9 @@ svg{
   max-width:90%;
 }
 
-.popup img{ width:100%; }
+.popup img{
+  width:100%;
+}
 </style>
 </head>
 
@@ -121,7 +135,8 @@ svg{
 
 <!-- LOGIN -->
 <div class="login">
-<input id="username" placeholder="Nhập tên...">
+<input id="username" placeholder="Tên">
+<input id="password" type="password" placeholder="Mật khẩu">
 <button onclick="login()">Đăng nhập</button>
 <span id="userDisplay"></span>
 </div>
@@ -129,15 +144,17 @@ svg{
 <nav>
 <button onclick="show('tongquan')">Tổng quan</button>
 <button onclick="show('bando')">Bản đồ</button>
-<button onclick="show('nghe')">Nghề</button>
+<button onclick="show('nghe')">Quay nghề</button>
 <button onclick="show('luat')">Luật</button>
 </nav>
 
+<!-- TỔNG QUAN -->
 <section id="tongquan">
 <h2>Tổng quan</h2>
 <p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
 </section>
 
+<!-- BẢN ĐỒ -->
 <section id="bando">
 <div class="map-container">
 <img src="./images/bandochinh.jpg" class="map-bg">
@@ -157,23 +174,30 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 </section>
 
-<!-- NGHỀ RANDOM -->
+<!-- NGHỀ -->
 <section id="nghe">
 <h2>🎲 Quay nghề</h2>
 
-<div class="job-box">
-<button class="spin-btn" onclick="spinJob()">QUAY NGAY</button>
-
-<div class="result" id="jobResult">Chưa có nghề</div>
+<div class="job-list">
+<div class="job-item" id="job0">Y sư</div>
+<div class="job-item" id="job1">Thương nhân</div>
+<div class="job-item" id="job2">Nông dân</div>
+<div class="job-item" id="job3">Quý tộc</div>
 </div>
+
+<button class="spin-btn" onclick="spinJob()">QUAY</button>
+
+<p id="result"></p>
+<p id="turn"></p>
 </section>
 
+<!-- LUẬT -->
 <section id="luat">
 <h2>Luật lệ</h2>
 <p>Các quy tắc của Cổ Quốc...</p>
 </section>
 
-<!-- POPUP MAP -->
+<!-- POPUP -->
 <div id="popup" class="popup">
 <div class="popup-content">
 <span onclick="closePopup()">X</span>
@@ -185,48 +209,38 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 <script>
 
 // ===== ACCOUNT =====
-let currentUser = localStorage.getItem("user");
+let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+let currentUser = null;
 
+// LOGIN
 function login(){
-let name = document.getElementById("username").value;
-if(!name) return alert("Nhập tên!");
+let u = username.value;
+let p = password.value;
 
-localStorage.setItem("user", name);
-currentUser = name;
+let acc = accounts.find(a=>a.user===u && a.pass===p);
 
-loadUser();
+if(!acc) return alert("Sai tài khoản!");
+
+currentUser = acc;
+userDisplay.innerText = "👤 " + u;
+
+turn.innerText = "Lượt quay: " + acc.turns;
 }
 
-function loadUser(){
-if(currentUser){
-document.getElementById("userDisplay").innerText = "👤 " + currentUser;
-}
-}
-
-// ===== TAB =====
+// TAB
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 localStorage.setItem("page", id);
 }
 
-// ===== LOAD =====
+// LOAD
 window.onload = function(){
-loadUser();
-
 let page = localStorage.getItem("page") || "tongquan";
 show(page);
-
-// load job theo user
-if(currentUser){
-let job = localStorage.getItem("job_"+currentUser);
-if(job){
-showJobResult(job);
-}
-}
 }
 
-// ===== MAP =====
+// MAP
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
 popup.style.display="flex";
@@ -239,32 +253,44 @@ function closePopup(){
 popup.style.display="none";
 }
 
-// ===== RANDOM JOB =====
-const jobs = [
-{key:"Y sư", desc:"Cứu thế cứu nạn"},
-{key:"Thương nhân", desc:"Buôn bán thiên hạ"},
-{key:"Nông dân", desc:"Nuôi sống quốc gia"},
-{key:"Quý tộc", desc:"Thống trị lãnh đạo"}
-];
+// JOB
+const jobs = ["Y sư","Thương nhân","Nông dân","Quý tộc"];
 
 function spinJob(){
 
 if(!currentUser) return alert("Đăng nhập trước!");
+if(currentUser.turns <= 0) return alert("Hết lượt!");
 
-let roll = Math.floor(Math.random()*jobs.length);
-let job = jobs[roll];
+let i=0;
 
-showJobResult(job);
+let interval = setInterval(()=>{
 
-// lưu theo user
-localStorage.setItem("job_"+currentUser, JSON.stringify(job));
+document.querySelectorAll(".job-item").forEach(j=>j.classList.remove("active-job"));
+
+document.getElementById("job"+(i%4)).classList.add("active-job");
+
+i++;
+
+if(i>10){
+
+clearInterval(interval);
+
+let resultIndex = Math.floor(Math.random()*4);
+
+document.querySelectorAll(".job-item").forEach(j=>j.classList.remove("active-job"));
+document.getElementById("job"+resultIndex).classList.add("active-job");
+
+result.innerText = "Bạn là: " + jobs[resultIndex];
+
+currentUser.turns--;
+localStorage.setItem("accounts", JSON.stringify(accounts));
+
+turn.innerText = "Lượt quay: " + currentUser.turns;
+
 }
 
-function showJobResult(job){
-if(typeof job === "string") job = JSON.parse(job);
+},150);
 
-document.getElementById("jobResult").innerHTML =
-"🏆 " + job.key + "<br>" + job.desc;
 }
 
 </script>
