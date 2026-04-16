@@ -13,7 +13,6 @@ body{
   background:#1a1a1a;
 }
 
-/* HEADER */
 header{
   text-align:center;
   padding:15px;
@@ -21,12 +20,10 @@ header{
   background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
 }
 
-/* MAP */
 .map-container{
   position:relative;
   max-width:1200px;
   margin:auto;
-  overflow:hidden;
 }
 
 .map-bg{
@@ -34,7 +31,6 @@ header{
   display:block;
 }
 
-/* SVG overlay */
 svg{
   position:absolute;
   top:0;
@@ -43,7 +39,7 @@ svg{
   height:100%;
 }
 
-/* REGION */
+/* vùng */
 .region{
   fill: rgba(255,215,0,0.12);
   stroke: rgba(255,215,0,0.6);
@@ -57,7 +53,13 @@ svg{
   filter: drop-shadow(0 0 15px gold);
 }
 
-/* TOOLTIP */
+/* vùng click label (ẩn) */
+.label{
+  fill: transparent;
+  cursor:pointer;
+}
+
+/* tooltip */
 .tooltip{
   position:fixed;
   background:#000;
@@ -67,15 +69,9 @@ svg{
   font-size:13px;
   pointer-events:none;
   opacity:0;
-  transition:0.2s;
 }
 
-/* ZOOM */
-.zooming{
-  transition: transform 0.6s ease;
-}
-
-/* POPUP */
+/* popup */
 .popup{
   position:fixed;
   top:0;
@@ -94,12 +90,6 @@ svg{
   border-radius:12px;
   text-align:center;
   max-width:900px;
-  animation:zoomIn 0.4s ease;
-}
-
-@keyframes zoomIn{
-  from{transform:scale(0.5);opacity:0;}
-  to{transform:scale(1);opacity:1;}
 }
 
 .popup img{
@@ -123,46 +113,53 @@ svg{
 
 <div class="map-container">
 
-<!-- ẢNH CHÍNH -->
 <img src="./images/bandochinh.jpg" id="map" class="map-bg">
 
-<!-- SVG VÙNG -->
 <svg viewBox="0 0 1200 650">
 
-<!-- TÂY CHÂU -->
+<!-- ===== VÙNG ===== -->
+
 <path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
 class="region"
 data-name="Tây Châu"
-data-img="taychau.jpg"
-data-x="200" data-y="300"></path>
+data-img="taychau.jpg"></path>
 
-<!-- BẮC CHÂU -->
 <path d="M350,50 L850,50 L800,200 L400,200 Z"
 class="region"
 data-name="Bắc Châu"
-data-img="bacchau.jpg"
-data-x="600" data-y="120"></path>
+data-img="bacchau.jpg"></path>
 
-<!-- ĐÔNG CHÂU -->
 <path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
 class="region"
 data-name="Đông Châu"
-data-img="dongchau.jpg"
-data-x="1000" data-y="300"></path>
+data-img="dongchau.jpg"></path>
 
-<!-- NAM CHÂU -->
 <path d="M350,400 L800,400 L850,600 L300,600 Z"
 class="region"
 data-name="Nam Châu"
-data-img="namchau.jpg"
-data-x="600" data-y="520"></path>
+data-img="namchau.jpg"></path>
 
-<!-- KINH QUỐC -->
 <ellipse cx="600" cy="300" rx="120" ry="90"
 class="region"
 data-name="Kinh Quốc"
-data-img="kinhquoc.jpg"
-data-x="600" data-y="300"></ellipse>
+data-img="kinhquoc.jpg"></ellipse>
+
+<!-- ===== CLICK VÀO CHỮ (QUAN TRỌNG) ===== -->
+
+<rect x="130" y="230" width="150" height="60"
+class="label" data-name="Tây Châu" data-img="taychau.jpg"/>
+
+<rect x="500" y="80" width="200" height="60"
+class="label" data-name="Bắc Châu" data-img="bacchau.jpg"/>
+
+<rect x="950" y="280" width="180" height="60"
+class="label" data-name="Đông Châu" data-img="dongchau.jpg"/>
+
+<rect x="500" y="500" width="200" height="60"
+class="label" data-name="Nam Châu" data-img="namchau.jpg"/>
+
+<rect x="520" y="260" width="160" height="60"
+class="label" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 
 </svg>
 
@@ -182,11 +179,10 @@ data-x="600" data-y="300"></ellipse>
 
 <script>
 const tooltip = document.getElementById("tooltip");
-const map = document.getElementById("map");
 
-document.querySelectorAll(".region").forEach(r => {
+// gộp region + label
+document.querySelectorAll(".region, .label").forEach(r => {
 
-  // TOOLTIP
   r.addEventListener("mousemove", e=>{
     tooltip.innerText = r.dataset.name;
     tooltip.style.left = e.clientX + 15 + "px";
@@ -198,39 +194,24 @@ document.querySelectorAll(".region").forEach(r => {
     tooltip.style.opacity = 0;
   });
 
-  // CLICK → ZOOM + POPUP (KHÔNG CHUYỂN TRANG)
   r.addEventListener("click", ()=>{
 
-    let x = r.dataset.x;
-    let y = r.dataset.y;
+    document.getElementById("popup").style.display="flex";
+    document.getElementById("title").innerText = r.dataset.name;
 
-    let scale = 2;
+    // FIX ẢNH
+    document.getElementById("img").src =
+      "./images/" + r.dataset.img + "?v=" + Date.now();
 
-    let offsetX = (600 - x) * (scale - 1);
-    let offsetY = (325 - y) * (scale - 1);
-
-    map.classList.add("zooming");
-    map.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-
-    setTimeout(()=>{
-      document.getElementById("popup").style.display="flex";
-      document.getElementById("title").innerText = r.dataset.name;
-
-      // ✅ FIX QUAN TRỌNG: ĐÚNG ĐƯỜNG DẪN GITHUB
-      document.getElementById("img").src = "./images/" + r.dataset.img;
-
-      document.getElementById("desc").innerText =
-        "Thông tin về " + r.dataset.name;
-    },600);
+    document.getElementById("desc").innerText =
+      "Thông tin về " + r.dataset.name;
 
   });
 
 });
 
-// ĐÓNG POPUP
 function closePopup(){
   document.getElementById("popup").style.display="none";
-  map.style.transform="scale(1)";
 }
 </script>
 
