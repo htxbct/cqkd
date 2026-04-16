@@ -64,37 +64,19 @@ section{
   cursor:pointer;
 }
 
-/* ===== MAP (GIỮ NGUYÊN) ===== */
+/* ===== MAP ===== */
 .map-container{
   position:relative;
   max-width:1200px;
   margin:auto;
-  overflow:hidden;
 }
 
 .map-bg{
   width:100%;
   display:block;
-  transition: transform 0.8s ease;
 }
 
-.fog{
-  position:absolute;
-  top:0;
-  left:0;
-  width:200%;
-  height:100%;
-  background: url('https://i.imgur.com/8IhQ9Zg.png') repeat;
-  opacity:0.15;
-  animation:fogMove 60s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes fogMove{
-  from{transform:translateX(0);}
-  to{transform:translateX(-50%);}
-}
-
+/* SVG overlay */
 svg{
   position:absolute;
   top:0;
@@ -103,32 +85,16 @@ svg{
   height:100%;
 }
 
+/* vùng click (ẩn hoàn toàn) */
 .region{
-  fill: rgba(255,215,0,0.12);
-  stroke: rgba(255,215,0,0.6);
-  stroke-width:2;
-  cursor:pointer;
-}
-
-.region:hover{
-  fill: rgba(255,215,0,0.55);
-}
-
-.label{
   fill: transparent;
+  stroke: transparent;
   cursor:pointer;
 }
 
-.castle{
-  font-size:22px;
-}
-
-.tooltip{
-  position:fixed;
-  background:#000;
-  color:#fff;
-  padding:5px;
-  opacity:0;
+/* hover nhẹ */
+.region:hover{
+  fill: rgba(255,255,255,0.05);
 }
 
 /* POPUP */
@@ -147,6 +113,13 @@ svg{
   color:#000;
   padding:20px;
   border-radius:10px;
+  max-width:600px;
+  text-align:center;
+}
+
+.popup img{
+  width:100%;
+  border-radius:8px;
 }
 </style>
 </head>
@@ -173,53 +146,63 @@ svg{
 <button class="back-btn" onclick="goBack()">⬅ Quay lại</button>
 
 <div class="map-container">
-<img src="./images/bandochinh.jpg" id="map" class="map-bg">
-<div class="fog"></div>
+<img src="./images/bandochinh.jpg" class="map-bg">
 
 <svg viewBox="0 0 1200 650">
 
 <path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
-class="region" data-name="Tây Châu" data-img="taychau.jpg" data-x="200" data-y="300"/>
+class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
 
 <path d="M350,50 L850,50 L800,200 L400,200 Z"
-class="region" data-name="Bắc Châu" data-img="bacchau.jpg" data-x="600" data-y="120"/>
+class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
 
 <path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
-class="region" data-name="Đông Châu" data-img="dongchau.jpg" data-x="1000" data-y="300"/>
+class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
 
 <path d="M350,400 L800,400 L850,600 L300,600 Z"
-class="region" data-name="Nam Châu" data-img="namchau.jpg" data-x="600" data-y="520"/>
+class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
 
 <ellipse cx="600" cy="300" rx="120" ry="90"
-class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg" data-x="600" data-y="300"/>
+class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 
 </svg>
 </div>
 </section>
 
-<!-- NGHỀ -->
+<!-- NGHỀ NGHIỆP -->
 <section id="nghenghiep">
 <h2>Nghề nghiệp</h2>
+
 <ul>
-<li>Y sư</li>
-<li>Thương nhân</li>
-<li>Nông dân</li>
-<li>Quý tộc</li>
+<li onclick="showJob('y')">Y sư</li>
+<li onclick="showJob('t')">Thương nhân</li>
+<li onclick="showJob('n')">Nông dân</li>
+<li onclick="showJob('q')">Quý tộc</li>
 </ul>
+
 </section>
 
-<!-- LUẬT -->
+<!-- LUẬT LỆ -->
 <section id="luatle">
 <h2>Luật lệ</h2>
 <p>Các quy tắc và luật lệ của Cổ Quốc...</p>
 </section>
 
-<!-- POPUP -->
+<!-- POPUP MAP -->
 <div id="popup" class="popup">
   <div class="popup-content">
     <span onclick="closePopup()" style="cursor:pointer">X</span>
     <h2 id="title"></h2>
-    <img id="img" style="width:100%">
+    <img id="img">
+  </div>
+</div>
+
+<!-- POPUP JOB -->
+<div id="jobPopup" class="popup">
+  <div class="popup-content">
+    <span onclick="closeJob()" style="cursor:pointer">X</span>
+    <h2 id="jobTitle"></h2>
+    <p id="jobDesc"></p>
   </div>
 </div>
 
@@ -235,7 +218,7 @@ function goBack(){
   show("tongquan");
 }
 
-// MAP CLICK
+// CLICK MAP
 document.querySelectorAll(".region").forEach(r=>{
   r.onclick = ()=>{
     document.getElementById("popup").style.display="flex";
@@ -244,8 +227,44 @@ document.querySelectorAll(".region").forEach(r=>{
   }
 });
 
+// đóng popup map
 function closePopup(){
   document.getElementById("popup").style.display="none";
+}
+
+// JOB
+function showJob(type){
+
+  let title = "";
+  let desc = "";
+
+  if(type === "y"){
+    title = "Y sư";
+    desc = "Cứu thế cứu nạn, chữa bệnh cứu người.";
+  }
+
+  if(type === "t"){
+    title = "Thương nhân";
+    desc = "Buôn bán khắp thiên hạ, tích lũy tài phú.";
+  }
+
+  if(type === "n"){
+    title = "Nông dân";
+    desc = "Trồng trọt nuôi sống quốc gia.";
+  }
+
+  if(type === "q"){
+    title = "Quý tộc";
+    desc = "Nắm quyền lực và điều hành quốc gia.";
+  }
+
+  document.getElementById("jobPopup").style.display="flex";
+  document.getElementById("jobTitle").innerText = title;
+  document.getElementById("jobDesc").innerText = desc;
+}
+
+function closeJob(){
+  document.getElementById("jobPopup").style.display="none";
 }
 </script>
 
