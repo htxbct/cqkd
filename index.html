@@ -13,7 +13,6 @@ body{
   color:#f5e6c8;
 }
 
-/* HEADER */
 header{
   text-align:center;
   padding:12px;
@@ -22,7 +21,6 @@ header{
   background:#5a3d2b;
 }
 
-/* NAV */
 nav{
   display:flex;
   justify-content:space-around;
@@ -36,19 +34,14 @@ nav button{
   color:#ffd700;
 }
 
-/* SECTION */
 section{display:none;padding:10px;}
 .active{display:block;}
 
-/* MAP */
-.map-wrap{
-  max-width:100%;
-}
 .map-wrap img{
   width:100%;
 }
 
-/* POPUP */
+/* popup */
 .popup{
   position:fixed;
   inset:0;
@@ -62,8 +55,6 @@ section{display:none;padding:10px;}
   color:#000;
   padding:15px;
   border-radius:10px;
-  width:80%;
-  max-width:300px;
 }
 .close{
   position:absolute;
@@ -71,14 +62,6 @@ section{display:none;padding:10px;}
   right:15px;
   color:white;
   font-size:24px;
-}
-
-/* JOB */
-.job{
-  background:#2c2c2c;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
 }
 </style>
 </head>
@@ -90,7 +73,7 @@ section{display:none;padding:10px;}
 <nav>
 <button onclick="tab('tongquan')">Tổng quan</button>
 <button onclick="tab('bando')">Bản đồ</button>
-<button onclick="tab('nghe')">Nghề nghiệp</button>
+<button onclick="tab('nghe')">Nghề</button>
 </nav>
 
 <!-- TỔNG QUAN -->
@@ -102,96 +85,49 @@ section{display:none;padding:10px;}
 <!-- BẢN ĐỒ -->
 <section id="bando">
 
-<!-- KINH QUỐC -->
 <div class="map-wrap">
-<img src="kinhquoc.jpg" usemap="#kinhquoc">
+<img src="images/kinhquoc.jpg" usemap="#kinhquoc">
 </div>
 
 <map name="kinhquoc">
 <area coords="600,240,820,240,830,350,600,350" shape="poly"
 onclick="info('Cung Thái Hòa','Trung tâm quyền lực')">
-
-<area coords="650,360,760,360,760,430,650,430" shape="poly"
-onclick="info('Cổng Nam','Cổng chính')">
-
-<area coords="880,230,1080,240,1080,360,880,360" shape="poly"
-onclick="info('Chợ Đông','Buôn bán lớn')">
-
-<area coords="250,280,420,300,420,400,250,380" shape="poly"
-onclick="info('Chợ Tây','Khu dân sinh')">
-
-<area coords="1020,200,1180,210,1180,300,1020,300" shape="poly"
-onclick="info('Văn Miếu','Học viện')">
 </map>
 
-<!-- ĐÔNG CHÂU -->
 <div class="map-wrap">
-<img src="dongchau.jpg" usemap="#dongchau">
+<img src="images/dongchau.jpg" usemap="#dongchau">
 </div>
 
 <map name="dongchau">
 <area coords="900,300,1150,320,1150,500,900,480" shape="poly"
 onclick="info('Hải Cảng','Trung tâm giao thương')">
-
-<area coords="700,350,880,350,880,520,700,500" shape="poly"
-onclick="info('Pháo Đài Biển','Phòng thủ')">
-
-<area coords="600,250,780,250,780,350,600,350" shape="poly"
-onclick="info('Làng Thổ Cổ','Khu dân cư')">
-
-<area coords="950,520,1150,520,1150,650,950,650" shape="poly"
-onclick="info('Quần Đảo Phượng Hoàng','Linh thiêng')">
 </map>
 
-<!-- NAM CHÂU -->
 <div class="map-wrap">
-<img src="namchau.jpg" usemap="#namchau">
+<img src="images/namchau.jpg" usemap="#namchau">
 </div>
 
 <map name="namchau">
 <area coords="500,300,800,300,800,500,500,500" shape="poly"
-onclick="info('Ruộng Lúa','Vựa lúa lớn')">
-
-<area coords="850,350,1100,350,1100,550,850,550" shape="poly"
-onclick="info('Hải Cảng','Giao thương')">
+onclick="info('Ruộng Lúa','Vựa lúa')">
 </map>
 
-<!-- BẮC CHÂU -->
 <div class="map-wrap">
-<img src="bacchau.jpg" usemap="#bacchau">
+<img src="images/bacchau.jpg" usemap="#bacchau">
 </div>
 
 <map name="bacchau">
 <area coords="500,250,750,250,750,400,500,400" shape="poly"
 onclick="info('Hồ Băng Nguyệt','Trung tâm')">
-
-<area coords="800,300,1000,300,1000,500,800,500" shape="poly"
-onclick="info('Vịnh Tuyết Ảnh','Biển băng')">
-
-<area coords="300,300,500,300,500,500,300,500" shape="poly"
-onclick="info('Rừng Tuyết Sâm','Nguy hiểm')">
-
-<area coords="900,500,1150,500,1150,650,900,650" shape="poly"
-onclick="info('Quần đảo Băng','Xa xôi')">
 </map>
 
-<!-- TÂY CHÂU -->
 <div class="map-wrap">
-<img src="taychau.jpg" usemap="#taychau">
+<img src="images/taychau.jpg" usemap="#taychau">
 </div>
 
 <map name="taychau">
 <area coords="400,200,900,200,900,450,400,450" shape="poly"
-onclick="info('Hoang Mạc','Sa mạc lớn')">
-
-<area coords="700,450,900,450,900,600,700,600" shape="poly"
-onclick="info('Ốc đảo Xanh','Nguồn sống')">
-
-<area coords="250,350,450,350,450,600,250,600" shape="poly"
-onclick="info('Vạn Lý Gia','Cổ thành')">
-
-<area coords="900,300,1150,300,1150,550,900,550" shape="poly"
-onclick="info('Hải Cảng','Giao thương')">
+onclick="info('Hoang Mạc','Sa mạc')">
 </map>
 
 </section>
@@ -199,12 +135,9 @@ onclick="info('Hải Cảng','Giao thương')">
 <!-- NGHỀ -->
 <section id="nghe">
 <h3>Nghề nghiệp</h3>
-
-<div class="job">⚔️ Kiếm Khách</div>
-<div class="job">🏹 Cung Thủ</div>
-<div class="job">🧙 Pháp Sư</div>
-<div class="job">🛡️ Hộ Vệ</div>
-
+<p>⚔️ Kiếm Khách</p>
+<p>🏹 Cung Thủ</p>
+<p>🧙 Pháp Sư</p>
 </section>
 
 <!-- POPUP -->
@@ -218,13 +151,11 @@ onclick="info('Hải Cảng','Giao thương')">
 
 <script>
 
-// TAB
 function tab(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// INFO POPUP
 function info(t,d){
 pop.style.display="flex";
 title.innerText=t;
