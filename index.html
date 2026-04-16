@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cổ Quốc Kỳ Đàm</title>
+
 <style>
 body {
   margin: 0;
@@ -11,61 +12,89 @@ body {
   background: #fff8e7;
   color: #4b2e2e;
 }
+
 header {
   background: linear-gradient(90deg, #d4a373, #fff, #8b5e3c);
   text-align: center;
-  padding: 30px 10px;
+  padding: 20px;
 }
+
 header h1 {
   margin: 0;
-  font-size: 36px;
+  font-size: 32px;
 }
+
 nav {
   display: flex;
   justify-content: center;
   background: #8b5e3c;
 }
+
 nav a {
   color: white;
-  padding: 14px 20px;
+  padding: 12px 18px;
   text-decoration: none;
+  cursor: pointer;
 }
+
 nav a:hover {
   background: #d4a373;
 }
+
 section {
-  padding: 20px;
   display: none;
+  padding: 20px;
 }
+
 .active {
   display: block;
 }
+
 .map-container {
   position: relative;
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
 }
+
 .map-container img {
   width: 100%;
+  border-radius: 10px;
 }
+
 .area {
   position: absolute;
   cursor: pointer;
+  border-radius: 50%;
+  transition: 0.3s;
 }
+
+.area:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 .fade-text span {
   opacity: 0;
-  display: inline-block;
   animation: fadeIn 0.5s forwards;
 }
+
 @keyframes fadeIn {
   to { opacity: 1; }
 }
+
+#detail {
+  margin-top: 20px;
+  text-align: center;
+}
+
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>CỔ QUỐC KỲ ĐÀM</h1>
 </header>
+
 <nav>
   <a onclick="showSection('tongquan')">Tổng quan</a>
   <a onclick="showSection('bando')">Bản đồ</a>
@@ -75,23 +104,37 @@ section {
 
 <section id="tongquan" class="active">
   <h2>Giới thiệu</h2>
-  <p>Cổ Quốc là một vùng đất giả tưởng mang đậm phong cách cổ trang.</p>
+  <p>Cổ Quốc là vùng đất huyền thoại mang phong cách cổ trang kiếm hiệp.</p>
+
   <h3>Quá trình hình thành</h3>
-  <p>Được khai lập từ thời loạn thế, các châu hợp nhất thành một quốc gia hùng mạnh.</p>
+  <p>Từ thời loạn thế, các châu hợp nhất tạo nên một quốc gia thống nhất.</p>
+
   <h3>Người sáng lập</h3>
   <p id="founder" class="fade-text"></p>
 </section>
 
 <section id="bando">
-  <h2>Bản đồ</h2>
+  <h2>Bản đồ tổng quan</h2>
+
   <div class="map-container">
-    <img src="images/bandochinh.jpg" alt="Bản đồ">
-    <div class="area" style="top:20%;left:70%;width:100px;height:100px;" onclick="openMap('dongchau')"></div>
-    <div class="area" style="top:10%;left:40%;width:100px;height:100px;" onclick="openMap('bacchau')"></div>
-    <div class="area" style="top:40%;left:10%;width:100px;height:100px;" onclick="openMap('taychau')"></div>
-    <div class="area" style="top:70%;left:40%;width:100px;height:100px;" onclick="openMap('namchau')"></div>
-    <div class="area" style="top:40%;left:45%;width:100px;height:100px;" onclick="openMap('kinhquoc')"></div>
+    <img src="./images/bandochinh.jpg">
+
+    <!-- Đông châu -->
+    <div class="area" style="top:25%;left:70%;width:120px;height:120px;" onclick="openMap('dongchau')"></div>
+
+    <!-- Bắc châu -->
+    <div class="area" style="top:5%;left:40%;width:120px;height:120px;" onclick="openMap('bacchau')"></div>
+
+    <!-- Tây châu -->
+    <div class="area" style="top:35%;left:5%;width:120px;height:120px;" onclick="openMap('taychau')"></div>
+
+    <!-- Nam châu -->
+    <div class="area" style="top:70%;left:40%;width:120px;height:120px;" onclick="openMap('namchau')"></div>
+
+    <!-- Kinh quốc -->
+    <div class="area" style="top:40%;left:45%;width:120px;height:120px;" onclick="openMap('kinhquoc')"></div>
   </div>
+
   <div id="detail"></div>
 </section>
 
@@ -107,27 +150,31 @@ section {
 
 <script>
 function showSection(id) {
-  document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-const text = "Thiên Kiếm Lão Tổ - người khai sáng Cổ Quốc.";
+// Hiệu ứng chữ
+const text = "Thiên Kiếm Lão Tổ - người khai sáng Cổ Quốc";
 const container = document.getElementById("founder");
 text.split("").forEach((char, i) => {
   const span = document.createElement("span");
   span.textContent = char;
-  span.style.animationDelay = i * 0.05 + "s";
+  span.style.animationDelay = i * 0.04 + "s";
   container.appendChild(span);
 });
 
+// Map chi tiết
 function openMap(region) {
   const detail = document.getElementById('detail');
+
   detail.innerHTML = `
-    <h3>${region}</h3>
-    <img src="images/${region}.jpg" style="width:100%;max-width:600px;">
+    <h3>${region.toUpperCase()}</h3>
+    <img src="./images/${region}.jpg" style="width:100%;max-width:700px;border-radius:10px;">
     <p>Thông tin chi tiết về ${region}...</p>
   `;
 }
 </script>
+
 </body>
 </html>
