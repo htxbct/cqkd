@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cổ Quốc Kỳ Đàm</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fff8e7;
+  color: #4b2e2e;
+}
+header {
+  background: linear-gradient(90deg, #d4a373, #fff, #8b5e3c);
+  text-align: center;
+  padding: 30px 10px;
+}
+header h1 {
+  margin: 0;
+  font-size: 36px;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  background: #8b5e3c;
+}
+nav a {
+  color: white;
+  padding: 14px 20px;
+  text-decoration: none;
+}
+nav a:hover {
+  background: #d4a373;
+}
+section {
+  padding: 20px;
+  display: none;
+}
+.active {
+  display: block;
+}
+.map-container {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+}
+.map-container img {
+  width: 100%;
+}
+.area {
+  position: absolute;
+  cursor: pointer;
+}
+.fade-text span {
+  opacity: 0;
+  display: inline-block;
+  animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>CỔ QUỐC KỲ ĐÀM</h1>
+</header>
+<nav>
+  <a onclick="showSection('tongquan')">Tổng quan</a>
+  <a onclick="showSection('bando')">Bản đồ</a>
+  <a onclick="showSection('nghenghiep')">Nghề Nghiệp</a>
+  <a onclick="showSection('khac')">Khác</a>
+</nav>
+
+<section id="tongquan" class="active">
+  <h2>Giới thiệu</h2>
+  <p>Cổ Quốc là một vùng đất giả tưởng mang đậm phong cách cổ trang.</p>
+  <h3>Quá trình hình thành</h3>
+  <p>Được khai lập từ thời loạn thế, các châu hợp nhất thành một quốc gia hùng mạnh.</p>
+  <h3>Người sáng lập</h3>
+  <p id="founder" class="fade-text"></p>
+</section>
+
+<section id="bando">
+  <h2>Bản đồ</h2>
+  <div class="map-container">
+    <img src="bandochinh.jpg" alt="Bản đồ">
+    <div class="area" style="top:20%;left:70%;width:100px;height:100px;" onclick="openMap('dongchau')"></div>
+    <div class="area" style="top:10%;left:40%;width:100px;height:100px;" onclick="openMap('bacchau')"></div>
+    <div class="area" style="top:40%;left:10%;width:100px;height:100px;" onclick="openMap('taychau')"></div>
+    <div class="area" style="top:70%;left:40%;width:100px;height:100px;" onclick="openMap('namchau')"></div>
+    <div class="area" style="top:40%;left:45%;width:100px;height:100px;" onclick="openMap('kinhquoc')"></div>
+  </div>
+  <div id="detail"></div>
+</section>
+
+<section id="nghenghiep">
+  <h2>Nghề nghiệp</h2>
+  <p>Kiếm khách, thương nhân, nông dân, quan lại...</p>
+</section>
+
+<section id="khac">
+  <h2>Khác</h2>
+  <p>Thông tin bổ sung...</p>
+</section>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+const text = "Thiên Kiếm Lão Tổ - người khai sáng Cổ Quốc.";
+const container = document.getElementById("founder");
+text.split("").forEach((char, i) => {
+  const span = document.createElement("span");
+  span.textContent = char;
+  span.style.animationDelay = i * 0.05 + "s";
+  container.appendChild(span);
+});
+
+function openMap(region) {
+  const detail = document.getElementById('detail');
+  detail.innerHTML = `
+    <h3>${region}</h3>
+    <img src="${region}.jpg" style="width:100%;max-width:600px;">
+    <p>Thông tin chi tiết về ${region}...</p>
+  `;
+}
+</script>
+</body>
+</html>
