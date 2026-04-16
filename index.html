@@ -13,7 +13,6 @@ body{
   color:#f5e6c8;
 }
 
-/* HEADER */
 header{
   text-align:center;
   padding:12px;
@@ -23,7 +22,6 @@ header{
   background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
 }
 
-/* NAV */
 nav{
   display:flex;
   justify-content:center;
@@ -36,10 +34,8 @@ nav button{
   border:none;
   color:#ffd700;
   background:none;
-  font-size:15px;
 }
 
-/* SECTION */
 section{ display:none; padding:12px; }
 .active{ display:block; }
 
@@ -73,7 +69,6 @@ svg{
   max-width:1000px;
 }
 
-/* MAP DETAIL */
 .map-detail{
   position:relative;
   flex:1;
@@ -84,62 +79,44 @@ svg{
   border-radius:10px;
 }
 
-/* ICON */
-.icon{
+.map-detail svg{
   position:absolute;
-  font-size:24px;
+  top:0;left:0;
+  width:100%;height:100%;
+}
+
+/* vùng click */
+.zone{
+  fill: rgba(255,255,255,0);
   cursor:pointer;
-  transform:translate(-50%,-50%);
 }
 
-.icon:active{
-  transform:translate(-50%,-50%) scale(1.2);
+.zone:hover{
+  fill: rgba(255,255,255,0.2);
 }
 
-/* INFO */
+/* info */
 .info-box{
   width:260px;
   background:#fff8e7;
   color:#000;
   padding:10px;
   border-radius:10px;
-  font-size:14px;
 }
 
-/* CLOSE */
 .close{
   position:absolute;
   top:10px;
   right:15px;
   font-size:26px;
-  cursor:pointer;
   color:#fff;
+  cursor:pointer;
 }
 
-/* ===== MOBILE ===== */
+/* mobile */
 @media(max-width:768px){
-
-.popup-inner{
-  flex-direction:column;
-}
-
-.info-box{
-  width:100%;
-}
-
-.icon{
-  font-size:26px; /* dễ bấm hơn */
-}
-
-nav button{
-  font-size:14px;
-  padding:10px;
-}
-
-header{
-  font-size:18px;
-}
-
+.popup-inner{ flex-direction:column; }
+.info-box{ width:100%; }
 }
 
 </style>
@@ -185,13 +162,14 @@ class="region" data-map="kinhquoc.jpg" data-name="Kinh Quốc"/>
 
 <div class="popup-inner">
 
-<div class="map-detail" id="mapDetail">
+<div class="map-detail">
 <img id="detailImg">
+<svg id="detailSVG" viewBox="0 0 1000 600"></svg>
 </div>
 
 <div class="info-box">
 <h3 id="infoTitle">Thông tin</h3>
-<p id="infoDesc">Chọn địa điểm...</p>
+<p id="infoDesc">Chọn khu vực...</p>
 </div>
 
 </div>
@@ -206,100 +184,74 @@ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// DATA ICON
-const mapIcons = {
+// ===== DATA VẼ CHUẨN =====
+const mapZones = {
 
 "kinhquoc.jpg":[
-{top:50,left:50,type:"hoangcung",title:"Cung Thái Hòa",desc:"Trung tâm quyền lực cao nhất"},
-{top:65,left:50,type:"cong",title:"Cổng Nam",desc:"Lối ra vào chính"},
-{top:45,left:30,type:"cho",title:"Chợ Tây",desc:"Khu buôn bán"},
-{top:45,left:70,type:"cho",title:"Chợ Đông",desc:"Khu giao thương"}
+{path:"M420,220 L580,220 L600,300 L400,300 Z",title:"Cung Thái Hòa",desc:"Hoàng cung trung tâm"},
+{path:"M450,300 L550,300 L550,380 L450,380 Z",title:"Cổng Nam",desc:"Lối ra chính"},
+{path:"M300,260 L380,260 L380,330 L300,330 Z",title:"Chợ Tây",desc:"Khu buôn bán"},
+{path:"M620,260 L700,260 L700,330 L620,330 Z",title:"Chợ Đông",desc:"Giao thương"}
 ],
 
 "dongchau.jpg":[
-{top:65,left:75,type:"cang",title:"Hải Cảng",desc:"Trung tâm giao thương"},
-{top:70,left:60,type:"thuyen",title:"Thuyền buôn",desc:"Xuất nhập hàng"},
-{top:45,left:55,type:"lang",title:"Làng Thổ Cổ",desc:"Khu dân cư"},
-{top:50,left:80,type:"dao",title:"Phượng Hoàng đảo",desc:"Vùng linh thiêng"}
+{path:"M700,350 L900,350 L900,520 L700,520 Z",title:"Hải Cảng",desc:"Trung tâm giao thương biển"},
+{path:"M550,420 L700,550 L500,550 Z",title:"Thuyền buôn",desc:"Vận chuyển hàng"},
+{path:"M500,250 L650,350 L400,350 Z",title:"Làng Thổ Cổ",desc:"Khu dân cư"}
 ],
 
 "namchau.jpg":[
-{top:50,left:50,type:"ruong",title:"Ruộng lúa",desc:"Vựa lúa lớn"},
-{top:65,left:70,type:"lang",title:"Làng ven sông",desc:"Khu dân cư"},
-{top:40,left:30,type:"thap",title:"Tháp cổ",desc:"Di tích"}
+{path:"M400,300 L650,300 L650,450 L400,450 Z",title:"Ruộng lúa",desc:"Vựa lúa quốc gia"},
+{path:"M650,450 L800,550 L650,550 Z",title:"Làng ven sông",desc:"Dân cư"}
 ],
 
 "bacchau.jpg":[
-{top:50,left:50,type:"thanh",title:"Thành băng",desc:"Pháo đài"},
-{top:60,left:70,type:"lang",title:"Làng băng",desc:"Cư dân"},
-{top:40,left:40,type:"rung",title:"Rừng tuyết",desc:"Nguy hiểm"}
+{path:"M400,250 L600,250 L600,400 L400,400 Z",title:"Thành băng",desc:"Pháo đài"},
+{path:"M600,400 L750,500 L550,500 Z",title:"Làng băng",desc:"Cư dân"}
 ],
 
 "taychau.jpg":[
-{top:55,left:45,type:"sa_mac",title:"Sa mạc",desc:"Khô cằn"},
-{top:65,left:65,type:"oc_dao",title:"Ốc đảo",desc:"Nguồn nước"},
-{top:45,left:30,type:"mo",title:"Mỏ khoáng",desc:"Tài nguyên"}
+{path:"M350,300 L650,300 L650,450 L350,450 Z",title:"Sa mạc",desc:"Vùng khô cằn"},
+{path:"M600,450 L750,550 L550,550 Z",title:"Ốc đảo",desc:"Nguồn nước"},
+{path:"M300,250 L400,350 L250,350 Z",title:"Mỏ khoáng",desc:"Tài nguyên"}
 ]
 
 };
 
-// CLICK MAP
+// CLICK REGION
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
 popup.style.display="flex";
 detailImg.src="./images/"+r.dataset.map;
 
 infoTitle.innerText = r.dataset.name;
-infoDesc.innerText = "Chọn địa điểm trong vùng...";
+infoDesc.innerText = "Chọn khu vực trong bản đồ...";
 
-renderIcons(r.dataset.map);
+renderZones(r.dataset.map);
 }
 });
 
-// RENDER ICON
-function renderIcons(map){
+// RENDER ZONE
+function renderZones(map){
 
-let container = document.getElementById("mapDetail");
-document.querySelectorAll(".icon").forEach(i=>i.remove());
+let svg = document.getElementById("detailSVG");
+svg.innerHTML="";
 
-mapIcons[map].forEach(i=>{
+mapZones[map].forEach(z=>{
 
-let div = document.createElement("div");
-div.className="icon";
-div.style.top = i.top+"%";
-div.style.left = i.left+"%";
-div.innerText = getIcon(i.type);
+let p = document.createElementNS("http://www.w3.org/2000/svg","path");
+p.setAttribute("d", z.path);
+p.setAttribute("class","zone");
 
-div.onclick = ()=>{
-infoTitle.innerText = i.title;
-infoDesc.innerText = i.desc;
+p.onclick = ()=>{
+infoTitle.innerText = z.title;
+infoDesc.innerText = z.desc;
 };
 
-container.appendChild(div);
+svg.appendChild(p);
 
 });
 
-}
-
-// ICON
-function getIcon(type){
-switch(type){
-case "hoangcung": return "🏯";
-case "cong": return "🚪";
-case "cho": return "🏪";
-case "cang": return "⚓";
-case "thuyen": return "⛵";
-case "dao": return "🏝️";
-case "lang": return "🏠";
-case "ruong": return "🌾";
-case "thap": return "🗼";
-case "thanh": return "🏰";
-case "rung": return "🌲";
-case "sa_mac": return "🏜️";
-case "oc_dao": return "💧";
-case "mo": return "⛏️";
-default: return "📍";
-}
 }
 
 function closePopup(){
