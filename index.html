@@ -8,40 +8,59 @@
 <style>
 body{
   margin:0;
-  font-family:sans-serif;
+  font-family:'Segoe UI',sans-serif;
   background:#1a1a1a;
   color:#f5e6c8;
 }
 
+/* HEADER */
 header{
   text-align:center;
-  padding:12px;
-  font-size:20px;
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
   color:#ffd700;
+  background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
+}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
   background:#5a3d2b;
 }
 
-nav{
-  display:flex;
-  justify-content:space-around;
-  background:#3b2a1d;
-}
 nav button{
-  flex:1;
   padding:10px;
   border:none;
-  background:none;
   color:#ffd700;
+  background:none;
+  cursor:pointer;
 }
 
-section{display:none;padding:10px;}
-.active{display:block;}
+section{
+  display:none;
+  padding:15px;
+}
+.active{ display:block; }
 
-.map-wrap img{
-  width:100%;
+/* MAP */
+.map-container{ position:relative; }
+.map-bg{ width:100%; }
+
+svg{
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
 }
 
-/* popup */
+.region{
+  fill:transparent;
+  cursor:pointer;
+}
+
+/* ===== POPUP MAP NÂNG CẤP ===== */
 .popup{
   position:fixed;
   inset:0;
@@ -50,18 +69,48 @@ section{display:none;padding:10px;}
   justify-content:center;
   align-items:center;
 }
-.box{
-  background:#fff8e7;
-  color:#000;
-  padding:15px;
+
+/* layout 2 cột */
+.popup-inner{
+  display:flex;
+  gap:15px;
+  max-width:900px;
+  width:95%;
+}
+
+/* ảnh map */
+.map-detail{
+  position:relative;
+  flex:1;
+}
+
+.map-detail img{
+  width:100%;
   border-radius:10px;
 }
+
+/* icon */
+.icon{
+  position:absolute;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* panel info */
+.info-box{
+  width:250px;
+  background:#fff8e7;
+  color:#000;
+  padding:10px;
+  border-radius:10px;
+}
+
 .close{
   position:absolute;
   top:10px;
-  right:15px;
-  color:white;
+  right:20px;
   font-size:24px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -71,99 +120,105 @@ section{display:none;padding:10px;}
 <header>CỔ QUỐC KỲ ĐÀM</header>
 
 <nav>
-<button onclick="tab('tongquan')">Tổng quan</button>
-<button onclick="tab('bando')">Bản đồ</button>
-<button onclick="tab('nghe')">Nghề</button>
+<button onclick="show('tongquan')">Tổng quan</button>
+<button onclick="show('bando')">Bản đồ</button>
+<button onclick="show('nghe')">Nghề</button>
 </nav>
 
-<!-- TỔNG QUAN -->
 <section id="tongquan" class="active">
-<h3>Tổng quan</h3>
-<p>Thiên hạ chia 5 châu: Đông - Tây - Nam - Bắc - Kinh Quốc.</p>
+<h2>Tổng quan</h2>
+<p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
 </section>
 
-<!-- BẢN ĐỒ -->
 <section id="bando">
+<div class="map-container">
+<img src="./images/bandochinh.jpg" class="map-bg">
 
-<div class="map-wrap">
-<img src="images/kinhquoc.jpg" usemap="#kinhquoc">
+<svg viewBox="0 0 1200 650">
+<path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
+class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
+<path d="M350,50 L850,50 L800,200 L400,200 Z"
+class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
+<path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
+class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
+<path d="M350,400 L800,400 L850,600 L300,600 Z"
+class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
+<ellipse cx="600" cy="300" rx="120" ry="90"
+class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
+</svg>
 </div>
-
-<map name="kinhquoc">
-<area coords="600,240,820,240,830,350,600,350" shape="poly"
-onclick="info('Cung Thái Hòa','Trung tâm quyền lực')">
-</map>
-
-<div class="map-wrap">
-<img src="images/dongchau.jpg" usemap="#dongchau">
-</div>
-
-<map name="dongchau">
-<area coords="900,300,1150,320,1150,500,900,480" shape="poly"
-onclick="info('Hải Cảng','Trung tâm giao thương')">
-</map>
-
-<div class="map-wrap">
-<img src="images/namchau.jpg" usemap="#namchau">
-</div>
-
-<map name="namchau">
-<area coords="500,300,800,300,800,500,500,500" shape="poly"
-onclick="info('Ruộng Lúa','Vựa lúa')">
-</map>
-
-<div class="map-wrap">
-<img src="images/bacchau.jpg" usemap="#bacchau">
-</div>
-
-<map name="bacchau">
-<area coords="500,250,750,250,750,400,500,400" shape="poly"
-onclick="info('Hồ Băng Nguyệt','Trung tâm')">
-</map>
-
-<div class="map-wrap">
-<img src="images/taychau.jpg" usemap="#taychau">
-</div>
-
-<map name="taychau">
-<area coords="400,200,900,200,900,450,400,450" shape="poly"
-onclick="info('Hoang Mạc','Sa mạc')">
-</map>
-
 </section>
 
-<!-- NGHỀ -->
 <section id="nghe">
-<h3>Nghề nghiệp</h3>
-<p>⚔️ Kiếm Khách</p>
-<p>🏹 Cung Thủ</p>
-<p>🧙 Pháp Sư</p>
+<h2>Hệ thống nghề nghiệp</h2>
+<p>Chọn nghề để xem mô tả...</p>
 </section>
 
 <!-- POPUP -->
-<div class="popup" id="pop">
-<div class="close" onclick="closePop()">✖</div>
-<div class="box">
-<h3 id="title"></h3>
-<p id="desc"></p>
+<div id="popup" class="popup">
+
+<span class="close" onclick="closePopup()">X</span>
+
+<div class="popup-inner">
+
+<!-- MAP DETAIL -->
+<div class="map-detail">
+
+<img id="detailImg">
+
+<!-- ICON -->
+<div class="icon" style="top:30%;left:40%" onclick="showInfo('thanh')">🏯</div>
+<div class="icon" style="top:60%;left:60%" onclick="showInfo('lang')">🏠</div>
+
 </div>
+
+<!-- INFO -->
+<div class="info-box">
+<h3 id="infoTitle">Thông tin</h3>
+<p id="infoDesc">Bấm vào icon để xem...</p>
+</div>
+
+</div>
+
 </div>
 
 <script>
 
-function tab(id){
+// TAB
+function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-function info(t,d){
-pop.style.display="flex";
-title.innerText=t;
-desc.innerText=d;
+// CLICK MAP
+document.querySelectorAll(".region").forEach(r=>{
+r.onclick=()=>{
+popup.style.display="flex";
+detailImg.src="./images/"+r.dataset.img;
+
+// reset info
+infoTitle.innerText = r.dataset.name;
+infoDesc.innerText = "Chọn địa điểm trong vùng...";
+}
+});
+
+function closePopup(){
+popup.style.display="none";
 }
 
-function closePop(){
-pop.style.display="none";
+// INFO CLICK
+function showInfo(type){
+
+if(type==="thanh"){
+infoTitle.innerText="Thành trì";
+infoDesc.innerText="Trung tâm quân sự, nơi đóng quân và phòng thủ.";
+}
+
+if(type==="lang"){
+infoTitle.innerText="Làng mạc";
+infoDesc.innerText="Khu dân cư, nơi sinh sống của người dân.";
+}
+
 }
 
 </script>
