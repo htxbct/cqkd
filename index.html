@@ -16,8 +16,8 @@ body{
 /* HEADER */
 header{
   text-align:center;
-  padding:20px;
-  font-size:28px;
+  padding:15px;
+  font-size:22px;
   font-weight:bold;
   color:#ffd700;
   background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
@@ -27,27 +27,23 @@ header{
 nav{
   display:flex;
   justify-content:center;
+  flex-wrap:wrap;
   background:#5a3d2b;
 }
 
 nav button{
-  padding:12px 20px;
-  background:none;
+  padding:10px;
   border:none;
   color:#ffd700;
+  background:none;
   cursor:pointer;
-  font-size:16px;
-}
-
-nav button:hover{
-  background:#c9a66b;
-  color:#000;
+  font-size:14px;
 }
 
 /* SECTION */
 section{
   display:none;
-  padding:20px;
+  padding:15px;
 }
 
 .active{
@@ -57,15 +53,13 @@ section{
 /* ===== MAP ===== */
 .map-container{
   position:relative;
-  max-width:1200px;
-  margin:auto;
+  width:100%;
 }
 
 .map-bg{
   width:100%;
 }
 
-/* SVG */
 svg{
   position:absolute;
   top:0;
@@ -79,37 +73,33 @@ svg{
   cursor:pointer;
 }
 
-.region:hover{
-  fill: rgba(255,255,255,0.05);
-}
-
-/* ===== JOB UI GAME ===== */
+/* ===== JOB ===== */
 .job-wrapper{
   display:flex;
-  gap:20px;
+  gap:15px;
 }
 
-/* LIST */
+/* GRID */
 .job-grid{
   flex:1;
   display:grid;
   grid-template-columns: repeat(2,1fr);
-  gap:20px;
+  gap:10px;
 }
 
+/* CARD */
 .job-card{
-  height:140px;
-  border-radius:12px;
-  cursor:pointer;
+  height:100px;
+  border-radius:10px;
   position:relative;
   overflow:hidden;
-  border:2px solid #c9a66b;
-  transition:0.3s;
+  border:1px solid #c9a66b;
   background-size:cover;
   background-position:center;
+  cursor:pointer;
 }
 
-/* overlay tối */
+/* overlay */
 .job-card::after{
   content:"";
   position:absolute;
@@ -120,13 +110,14 @@ svg{
 /* text */
 .job-card h3{
   position:absolute;
-  bottom:10px;
-  left:10px;
-  z-index:2;
+  bottom:5px;
+  left:5px;
+  font-size:14px;
   color:#ffd700;
+  z-index:2;
 }
 
-/* 🔥 ánh sáng chạy */
+/* shine */
 .job-card::before{
   content:"";
   position:absolute;
@@ -144,38 +135,58 @@ svg{
   to{ transform:translateX(100%); }
 }
 
-/* chọn nghề */
+/* selected */
 .selected{
-  outline:3px solid gold;
-  box-shadow:0 0 20px gold;
+  outline:2px solid gold;
 }
 
-/* PANEL BÊN PHẢI */
+/* PANEL */
 .job-panel{
-  width:300px;
+  width:220px;
   background:#2c1b10;
-  border-left:3px solid gold;
-  padding:20px;
+  padding:10px;
   border-radius:10px;
 }
 
 .job-panel h2{
-  color:#ffd700;
+  font-size:16px;
+}
+
+.job-panel p{
+  font-size:13px;
 }
 
 .choose-btn{
   margin-top:10px;
-  padding:8px 15px;
-  background:gold;
-  border:none;
-  cursor:pointer;
+  padding:6px;
+  width:100%;
 }
 
-/* ===== POPUP MAP ===== */
+/* ===== MOBILE FIX ===== */
+@media(max-width:768px){
+
+.job-wrapper{
+  flex-direction:column;
+}
+
+.job-grid{
+  grid-template-columns: repeat(2,1fr);
+}
+
+.job-card{
+  height:90px;
+}
+
+.job-panel{
+  width:100%;
+}
+
+}
+
+/* ===== POPUP ===== */
 .popup{
   position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
+  inset:0;
   background:rgba(0,0,0,0.85);
   display:none;
   justify-content:center;
@@ -185,9 +196,9 @@ svg{
 .popup-content{
   background:#fff8e7;
   color:#000;
-  padding:20px;
+  padding:15px;
   border-radius:10px;
-  max-width:600px;
+  max-width:90%;
 }
 
 .popup img{
@@ -203,17 +214,15 @@ svg{
 <nav>
 <button onclick="show('tongquan')">Tổng quan</button>
 <button onclick="show('bando')">Bản đồ</button>
-<button onclick="show('nghenghiep')">Nghề nghiệp</button>
-<button onclick="show('luatle')">Luật lệ</button>
+<button onclick="show('nghenghiep')">Nghề</button>
+<button onclick="show('luatle')">Luật</button>
 </nav>
 
-<!-- TỔNG QUAN -->
 <section id="tongquan" class="active">
 <h2>Tổng quan</h2>
 <p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
 </section>
 
-<!-- BẢN ĐỒ -->
 <section id="bando">
 <div class="map-container">
 <img src="./images/bandochinh.jpg" class="map-bg">
@@ -233,33 +242,18 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 </section>
 
-<!-- NGHỀ -->
 <section id="nghenghiep">
 <h2>Chọn nghề</h2>
 
 <div class="job-wrapper">
 
 <div class="job-grid">
-
-<div class="job-card" style="background-image:url('./images/y.jpg')" onclick="openJob('y',this)">
-<h3>Y sư</h3>
+<div class="job-card" style="background-image:url('./images/y.jpg')" onclick="openJob('y',this)"><h3>Y sư</h3></div>
+<div class="job-card" style="background-image:url('./images/t.jpg')" onclick="openJob('t',this)"><h3>Thương nhân</h3></div>
+<div class="job-card" style="background-image:url('./images/n.jpg')" onclick="openJob('n',this)"><h3>Nông dân</h3></div>
+<div class="job-card" style="background-image:url('./images/q.jpg')" onclick="openJob('q',this)"><h3>Quý tộc</h3></div>
 </div>
 
-<div class="job-card" style="background-image:url('./images/t.jpg')" onclick="openJob('t',this)">
-<h3>Thương nhân</h3>
-</div>
-
-<div class="job-card" style="background-image:url('./images/n.jpg')" onclick="openJob('n',this)">
-<h3>Nông dân</h3>
-</div>
-
-<div class="job-card" style="background-image:url('./images/q.jpg')" onclick="openJob('q',this)">
-<h3>Quý tộc</h3>
-</div>
-
-</div>
-
-<!-- PANEL -->
 <div class="job-panel">
 <h2 id="jobTitle">Chọn nghề</h2>
 <p id="jobDesc">Hãy chọn con đường của bạn...</p>
@@ -269,13 +263,11 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 </section>
 
-<!-- LUẬT -->
 <section id="luatle">
 <h2>Luật lệ</h2>
-<p>Các quy tắc và luật lệ của Cổ Quốc...</p>
+<p>Các quy tắc của Cổ Quốc...</p>
 </section>
 
-<!-- POPUP MAP -->
 <div id="popup" class="popup">
 <div class="popup-content">
 <span onclick="closePopup()">X</span>
@@ -285,18 +277,16 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 
 <script>
-// TAB
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// MAP
 document.querySelectorAll(".region").forEach(r=>{
-r.onclick = ()=>{
+r.onclick=()=>{
 document.getElementById("popup").style.display="flex";
-document.getElementById("title").innerText = r.dataset.name;
-document.getElementById("img").src = "./images/" + r.dataset.img;
+document.getElementById("title").innerText=r.dataset.name;
+document.getElementById("img").src="./images/"+r.dataset.img;
 }
 });
 
@@ -304,32 +294,26 @@ function closePopup(){
 document.getElementById("popup").style.display="none";
 }
 
-// JOB SYSTEM
-let currentJob = "";
-let selectedCard = null;
+let currentJob="";
 
-function openJob(type, el){
-
+function openJob(type,el){
 document.querySelectorAll(".job-card").forEach(c=>c.classList.remove("selected"));
 el.classList.add("selected");
+currentJob=type;
 
-currentJob = type;
-selectedCard = el;
+let t="",d="";
+if(type==="y"){t="Y sư";d="Cứu thế cứu nạn";}
+if(type==="t"){t="Thương nhân";d="Buôn bán thiên hạ";}
+if(type==="n"){t="Nông dân";d="Nuôi sống quốc gia";}
+if(type==="q"){t="Quý tộc";d="Thống trị và lãnh đạo";}
 
-let title="",desc="";
-
-if(type==="y"){ title="Y sư"; desc="Cứu thế cứu nạn, chữa bệnh cứu người."; }
-if(type==="t"){ title="Thương nhân"; desc="Buôn bán thiên hạ, giàu có vô song."; }
-if(type==="n"){ title="Nông dân"; desc="Lao động, nuôi sống toàn quốc."; }
-if(type==="q"){ title="Quý tộc"; desc="Quyền lực, thống trị và lãnh đạo."; }
-
-document.getElementById("jobTitle").innerText=title;
-document.getElementById("jobDesc").innerText=desc;
+jobTitle.innerText=t;
+jobDesc.innerText=d;
 }
 
 function selectJob(){
 if(!currentJob) return alert("Chọn nghề trước!");
-alert("Bạn đã chọn nghề: " + document.getElementById("jobTitle").innerText);
+alert("Bạn đã chọn: "+jobTitle.innerText);
 }
 </script>
 
