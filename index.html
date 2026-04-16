@@ -39,128 +39,78 @@ nav button{
   cursor:pointer;
 }
 
-/* SECTION */
 section{
   display:none;
   padding:15px;
 }
+.active{ display:block; }
 
-.active{
-  display:block;
-}
-
-/* ===== MAP ===== */
-.map-container{
-  position:relative;
-}
-
-.map-bg{
-  width:100%;
-}
+/* MAP */
+.map-container{ position:relative; }
+.map-bg{ width:100%; }
 
 svg{
   position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  top:0;left:0;
+  width:100%;height:100%;
 }
 
 .region{
-  fill: transparent;
+  fill:transparent;
   cursor:pointer;
 }
 
-.region:hover{
-  fill: rgba(255,255,255,0.05);
-}
-
-/* ===== JOB UI ===== */
-.job-wrapper{
-  display:flex;
-  gap:15px;
-}
-
-.job-grid{
-  flex:1;
-  display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:10px;
-}
-
-.job-card{
-  height:100px;
-  border-radius:10px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid #c9a66b;
-  background-size:cover;
-  background-position:center;
-  cursor:pointer;
-}
-
-.job-card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-}
-
-.job-card h3{
-  position:absolute;
-  bottom:5px;
-  left:5px;
-  font-size:14px;
-  color:#ffd700;
-  z-index:2;
-}
-
-.job-card:hover{
-  box-shadow:0 0 15px gold;
-}
-
-/* PANEL */
-.job-panel{
-  width:220px;
-  background:#2c1b10;
-  padding:10px;
-  border-radius:10px;
-}
-
-.job-panel h2{
-  color:#ffd700;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-.job-wrapper{
-  flex-direction:column;
-}
-.job-panel{
-  width:100%;
-}
-}
-
-/* POPUP MAP */
+/* ===== POPUP MAP NÂNG CẤP ===== */
 .popup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.85);
+  background:rgba(0,0,0,0.9);
   display:none;
   justify-content:center;
   align-items:center;
 }
 
-.popup-content{
-  background:#fff8e7;
-  color:#000;
-  padding:15px;
-  border-radius:10px;
-  max-width:90%;
+/* layout 2 cột */
+.popup-inner{
+  display:flex;
+  gap:15px;
+  max-width:900px;
+  width:95%;
 }
 
-.popup img{
+/* ảnh map */
+.map-detail{
+  position:relative;
+  flex:1;
+}
+
+.map-detail img{
   width:100%;
+  border-radius:10px;
+}
+
+/* icon */
+.icon{
+  position:absolute;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* panel info */
+.info-box{
+  width:250px;
+  background:#fff8e7;
+  color:#000;
+  padding:10px;
+  border-radius:10px;
+}
+
+.close{
+  position:absolute;
+  top:10px;
+  right:20px;
+  font-size:24px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -175,18 +125,11 @@ svg{
 <button onclick="show('nghe')">Nghề</button>
 </nav>
 
-<!-- TỔNG QUAN -->
 <section id="tongquan" class="active">
 <h2>Tổng quan</h2>
-<p>
-Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ.  
-Trải qua hàng trăm năm phân tranh, quốc gia chia thành các châu:  
-Tây, Đông, Nam, Bắc và trung tâm là Kinh Quốc.  
-Mỗi vùng mang một đặc trưng riêng về văn hóa, kinh tế và quyền lực.
-</p>
+<p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
 </section>
 
-<!-- BẢN ĐỒ -->
 <section id="bando">
 <div class="map-container">
 <img src="./images/bandochinh.jpg" class="map-bg">
@@ -206,47 +149,37 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 </div>
 </section>
 
-<!-- NGHỀ -->
 <section id="nghe">
 <h2>Hệ thống nghề nghiệp</h2>
-
-<div class="job-wrapper">
-
-<div class="job-grid">
-
-<div class="job-card" onclick="openJob('y')" style="background-image:url('./images/y.jpg')">
-<h3>Y sư</h3>
-</div>
-
-<div class="job-card" onclick="openJob('t')" style="background-image:url('./images/t.jpg')">
-<h3>Thương nhân</h3>
-</div>
-
-<div class="job-card" onclick="openJob('n')" style="background-image:url('./images/n.jpg')">
-<h3>Nông dân</h3>
-</div>
-
-<div class="job-card" onclick="openJob('q')" style="background-image:url('./images/q.jpg')">
-<h3>Quý tộc</h3>
-</div>
-
-</div>
-
-<div class="job-panel">
-<h2 id="jobTitle">Chọn nghề</h2>
-<p id="jobDesc">Chọn một nghề để xem mô tả...</p>
-</div>
-
-</div>
+<p>Chọn nghề để xem mô tả...</p>
 </section>
 
 <!-- POPUP -->
 <div id="popup" class="popup">
-<div class="popup-content">
-<span onclick="closePopup()">X</span>
-<h2 id="title"></h2>
-<img id="img">
+
+<span class="close" onclick="closePopup()">X</span>
+
+<div class="popup-inner">
+
+<!-- MAP DETAIL -->
+<div class="map-detail">
+
+<img id="detailImg">
+
+<!-- ICON -->
+<div class="icon" style="top:30%;left:40%" onclick="showInfo('thanh')">🏯</div>
+<div class="icon" style="top:60%;left:60%" onclick="showInfo('lang')">🏠</div>
+
 </div>
+
+<!-- INFO -->
+<div class="info-box">
+<h3 id="infoTitle">Thông tin</h3>
+<p id="infoDesc">Bấm vào icon để xem...</p>
+</div>
+
+</div>
+
 </div>
 
 <script>
@@ -257,12 +190,15 @@ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// MAP
+// CLICK MAP
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
 popup.style.display="flex";
-title.innerText=r.dataset.name;
-img.src="./images/"+r.dataset.img;
+detailImg.src="./images/"+r.dataset.img;
+
+// reset info
+infoTitle.innerText = r.dataset.name;
+infoDesc.innerText = "Chọn địa điểm trong vùng...";
 }
 });
 
@@ -270,33 +206,19 @@ function closePopup(){
 popup.style.display="none";
 }
 
-// JOB INFO
-function openJob(type){
+// INFO CLICK
+function showInfo(type){
 
-let t="",d="";
-
-if(type==="y"){
-t="Y sư";
-d="Cứu thế cứu nạn, chữa bệnh cứu người.";
+if(type==="thanh"){
+infoTitle.innerText="Thành trì";
+infoDesc.innerText="Trung tâm quân sự, nơi đóng quân và phòng thủ.";
 }
 
-if(type==="t"){
-t="Thương nhân";
-d="Buôn bán khắp thiên hạ, tích lũy tài phú.";
+if(type==="lang"){
+infoTitle.innerText="Làng mạc";
+infoDesc.innerText="Khu dân cư, nơi sinh sống của người dân.";
 }
 
-if(type==="n"){
-t="Nông dân";
-d="Lao động sản xuất, nuôi sống quốc gia.";
-}
-
-if(type==="q"){
-t="Quý tộc";
-d="Nắm quyền lực và điều hành quốc gia.";
-}
-
-jobTitle.innerText=t;
-jobDesc.innerText=d;
 }
 
 </script>
