@@ -16,8 +16,8 @@ body{
 /* HEADER */
 header{
   text-align:center;
-  padding:15px;
-  font-size:22px;
+  padding:12px;
+  font-size:20px;
   font-weight:bold;
   color:#ffd700;
   background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
@@ -27,22 +27,20 @@ header{
 nav{
   display:flex;
   justify-content:center;
-  flex-wrap:wrap;
   background:#5a3d2b;
 }
 
 nav button{
-  padding:10px;
+  flex:1;
+  padding:12px;
   border:none;
   color:#ffd700;
   background:none;
-  cursor:pointer;
+  font-size:15px;
 }
 
-section{
-  display:none;
-  padding:15px;
-}
+/* SECTION */
+section{ display:none; padding:12px; }
 .active{ display:block; }
 
 /* MAP */
@@ -55,12 +53,9 @@ svg{
   width:100%;height:100%;
 }
 
-.region{
-  fill:transparent;
-  cursor:pointer;
-}
+.region{ fill:transparent; cursor:pointer; }
 
-/* ===== POPUP MAP NÂNG CẤP ===== */
+/* POPUP */
 .popup{
   position:fixed;
   inset:0;
@@ -68,17 +63,17 @@ svg{
   display:none;
   justify-content:center;
   align-items:center;
+  padding:10px;
 }
 
-/* layout 2 cột */
 .popup-inner{
   display:flex;
-  gap:15px;
-  max-width:900px;
-  width:95%;
+  gap:10px;
+  width:100%;
+  max-width:1000px;
 }
 
-/* ảnh map */
+/* MAP DETAIL */
 .map-detail{
   position:relative;
   flex:1;
@@ -89,29 +84,64 @@ svg{
   border-radius:10px;
 }
 
-/* icon */
+/* ICON */
 .icon{
   position:absolute;
-  font-size:22px;
+  font-size:24px;
   cursor:pointer;
+  transform:translate(-50%,-50%);
 }
 
-/* panel info */
+.icon:active{
+  transform:translate(-50%,-50%) scale(1.2);
+}
+
+/* INFO */
 .info-box{
-  width:250px;
+  width:260px;
   background:#fff8e7;
   color:#000;
   padding:10px;
   border-radius:10px;
+  font-size:14px;
 }
 
+/* CLOSE */
 .close{
   position:absolute;
   top:10px;
-  right:20px;
-  font-size:24px;
+  right:15px;
+  font-size:26px;
   cursor:pointer;
+  color:#fff;
 }
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+
+.popup-inner{
+  flex-direction:column;
+}
+
+.info-box{
+  width:100%;
+}
+
+.icon{
+  font-size:26px; /* dễ bấm hơn */
+}
+
+nav button{
+  font-size:14px;
+  padding:10px;
+}
+
+header{
+  font-size:18px;
+}
+
+}
+
 </style>
 </head>
 
@@ -122,7 +152,6 @@ svg{
 <nav>
 <button onclick="show('tongquan')">Tổng quan</button>
 <button onclick="show('bando')">Bản đồ</button>
-<button onclick="show('nghe')">Nghề</button>
 </nav>
 
 <section id="tongquan" class="active">
@@ -136,46 +165,33 @@ svg{
 
 <svg viewBox="0 0 1200 650">
 <path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
-class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
+class="region" data-map="taychau.jpg" data-name="Tây Châu"/>
 <path d="M350,50 L850,50 L800,200 L400,200 Z"
-class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
+class="region" data-map="bacchau.jpg" data-name="Bắc Châu"/>
 <path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
-class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
+class="region" data-map="dongchau.jpg" data-name="Đông Châu"/>
 <path d="M350,400 L800,400 L850,600 L300,600 Z"
-class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
+class="region" data-map="namchau.jpg" data-name="Nam Châu"/>
 <ellipse cx="600" cy="300" rx="120" ry="90"
-class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
+class="region" data-map="kinhquoc.jpg" data-name="Kinh Quốc"/>
 </svg>
 </div>
-</section>
-
-<section id="nghe">
-<h2>Hệ thống nghề nghiệp</h2>
-<p>Chọn nghề để xem mô tả...</p>
 </section>
 
 <!-- POPUP -->
 <div id="popup" class="popup">
 
-<span class="close" onclick="closePopup()">X</span>
+<span class="close" onclick="closePopup()">✖</span>
 
 <div class="popup-inner">
 
-<!-- MAP DETAIL -->
-<div class="map-detail">
-
+<div class="map-detail" id="mapDetail">
 <img id="detailImg">
-
-<!-- ICON -->
-<div class="icon" style="top:30%;left:40%" onclick="showInfo('thanh')">🏯</div>
-<div class="icon" style="top:60%;left:60%" onclick="showInfo('lang')">🏠</div>
-
 </div>
 
-<!-- INFO -->
 <div class="info-box">
 <h3 id="infoTitle">Thông tin</h3>
-<p id="infoDesc">Bấm vào icon để xem...</p>
+<p id="infoDesc">Chọn địa điểm...</p>
 </div>
 
 </div>
@@ -190,35 +206,104 @@ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
+// DATA ICON
+const mapIcons = {
+
+"kinhquoc.jpg":[
+{top:50,left:50,type:"hoangcung",title:"Cung Thái Hòa",desc:"Trung tâm quyền lực cao nhất"},
+{top:65,left:50,type:"cong",title:"Cổng Nam",desc:"Lối ra vào chính"},
+{top:45,left:30,type:"cho",title:"Chợ Tây",desc:"Khu buôn bán"},
+{top:45,left:70,type:"cho",title:"Chợ Đông",desc:"Khu giao thương"}
+],
+
+"dongchau.jpg":[
+{top:65,left:75,type:"cang",title:"Hải Cảng",desc:"Trung tâm giao thương"},
+{top:70,left:60,type:"thuyen",title:"Thuyền buôn",desc:"Xuất nhập hàng"},
+{top:45,left:55,type:"lang",title:"Làng Thổ Cổ",desc:"Khu dân cư"},
+{top:50,left:80,type:"dao",title:"Phượng Hoàng đảo",desc:"Vùng linh thiêng"}
+],
+
+"namchau.jpg":[
+{top:50,left:50,type:"ruong",title:"Ruộng lúa",desc:"Vựa lúa lớn"},
+{top:65,left:70,type:"lang",title:"Làng ven sông",desc:"Khu dân cư"},
+{top:40,left:30,type:"thap",title:"Tháp cổ",desc:"Di tích"}
+],
+
+"bacchau.jpg":[
+{top:50,left:50,type:"thanh",title:"Thành băng",desc:"Pháo đài"},
+{top:60,left:70,type:"lang",title:"Làng băng",desc:"Cư dân"},
+{top:40,left:40,type:"rung",title:"Rừng tuyết",desc:"Nguy hiểm"}
+],
+
+"taychau.jpg":[
+{top:55,left:45,type:"sa_mac",title:"Sa mạc",desc:"Khô cằn"},
+{top:65,left:65,type:"oc_dao",title:"Ốc đảo",desc:"Nguồn nước"},
+{top:45,left:30,type:"mo",title:"Mỏ khoáng",desc:"Tài nguyên"}
+]
+
+};
+
 // CLICK MAP
 document.querySelectorAll(".region").forEach(r=>{
 r.onclick=()=>{
 popup.style.display="flex";
-detailImg.src="./images/"+r.dataset.img;
+detailImg.src="./images/"+r.dataset.map;
 
-// reset info
 infoTitle.innerText = r.dataset.name;
 infoDesc.innerText = "Chọn địa điểm trong vùng...";
+
+renderIcons(r.dataset.map);
 }
 });
 
+// RENDER ICON
+function renderIcons(map){
+
+let container = document.getElementById("mapDetail");
+document.querySelectorAll(".icon").forEach(i=>i.remove());
+
+mapIcons[map].forEach(i=>{
+
+let div = document.createElement("div");
+div.className="icon";
+div.style.top = i.top+"%";
+div.style.left = i.left+"%";
+div.innerText = getIcon(i.type);
+
+div.onclick = ()=>{
+infoTitle.innerText = i.title;
+infoDesc.innerText = i.desc;
+};
+
+container.appendChild(div);
+
+});
+
+}
+
+// ICON
+function getIcon(type){
+switch(type){
+case "hoangcung": return "🏯";
+case "cong": return "🚪";
+case "cho": return "🏪";
+case "cang": return "⚓";
+case "thuyen": return "⛵";
+case "dao": return "🏝️";
+case "lang": return "🏠";
+case "ruong": return "🌾";
+case "thap": return "🗼";
+case "thanh": return "🏰";
+case "rung": return "🌲";
+case "sa_mac": return "🏜️";
+case "oc_dao": return "💧";
+case "mo": return "⛏️";
+default: return "📍";
+}
+}
+
 function closePopup(){
 popup.style.display="none";
-}
-
-// INFO CLICK
-function showInfo(type){
-
-if(type==="thanh"){
-infoTitle.innerText="Thành trì";
-infoDesc.innerText="Trung tâm quân sự, nơi đóng quân và phòng thủ.";
-}
-
-if(type==="lang"){
-infoTitle.innerText="Làng mạc";
-infoDesc.innerText="Khu dân cư, nơi sinh sống của người dân.";
-}
-
 }
 
 </script>
