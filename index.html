@@ -8,48 +8,45 @@
 <style>
 body{
   margin:0;
-  font-family:'Segoe UI',sans-serif;
+  font-family:sans-serif;
   background:#1a1a1a;
   color:#f5e6c8;
 }
 
+/* HEADER */
 header{
   text-align:center;
   padding:12px;
   font-size:20px;
-  font-weight:bold;
   color:#ffd700;
-  background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
-}
-
-nav{
-  display:flex;
-  justify-content:center;
   background:#5a3d2b;
 }
 
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-around;
+  background:#3b2a1d;
+}
 nav button{
   flex:1;
-  padding:12px;
+  padding:10px;
   border:none;
-  color:#ffd700;
   background:none;
+  color:#ffd700;
 }
 
-section{ display:none; padding:12px; }
-.active{ display:block; }
+/* SECTION */
+section{display:none;padding:10px;}
+.active{display:block;}
 
 /* MAP */
-.map-container{ position:relative; }
-.map-bg{ width:100%; }
-
-svg{
-  position:absolute;
-  top:0;left:0;
-  width:100%;height:100%;
+.map-wrap{
+  max-width:100%;
 }
-
-.region{ fill:transparent; cursor:pointer; }
+.map-wrap img{
+  width:100%;
+}
 
 /* POPUP */
 .popup{
@@ -59,66 +56,30 @@ svg{
   display:none;
   justify-content:center;
   align-items:center;
-  padding:10px;
 }
-
-.popup-inner{
-  display:flex;
-  gap:10px;
-  width:100%;
-  max-width:1000px;
-}
-
-.map-detail{
-  position:relative;
-  flex:1;
-}
-
-.map-detail img{
-  width:100%;
-  border-radius:10px;
-}
-
-.map-detail svg{
-  position:absolute;
-  top:0;left:0;
-  width:100%;height:100%;
-}
-
-/* vùng click */
-.zone{
-  fill: rgba(255,255,255,0);
-  cursor:pointer;
-}
-
-.zone:hover{
-  fill: rgba(255,255,255,0.2);
-}
-
-/* info */
-.info-box{
-  width:260px;
+.box{
   background:#fff8e7;
   color:#000;
-  padding:10px;
+  padding:15px;
   border-radius:10px;
+  width:80%;
+  max-width:300px;
 }
-
 .close{
   position:absolute;
   top:10px;
   right:15px;
-  font-size:26px;
-  color:#fff;
-  cursor:pointer;
+  color:white;
+  font-size:24px;
 }
 
-/* mobile */
-@media(max-width:768px){
-.popup-inner{ flex-direction:column; }
-.info-box{ width:100%; }
+/* JOB */
+.job{
+  background:#2c2c2c;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
 }
-
 </style>
 </head>
 
@@ -127,135 +88,151 @@ svg{
 <header>CỔ QUỐC KỲ ĐÀM</header>
 
 <nav>
-<button onclick="show('tongquan')">Tổng quan</button>
-<button onclick="show('bando')">Bản đồ</button>
+<button onclick="tab('tongquan')">Tổng quan</button>
+<button onclick="tab('bando')">Bản đồ</button>
+<button onclick="tab('nghe')">Nghề nghiệp</button>
 </nav>
 
+<!-- TỔNG QUAN -->
 <section id="tongquan" class="active">
-<h2>Tổng quan</h2>
-<p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
+<h3>Tổng quan</h3>
+<p>Thiên hạ chia 5 châu: Đông - Tây - Nam - Bắc - Kinh Quốc.</p>
 </section>
 
+<!-- BẢN ĐỒ -->
 <section id="bando">
-<div class="map-container">
-<img src="./images/bandochinh.jpg" class="map-bg">
 
-<svg viewBox="0 0 1200 650">
-<path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z"
-class="region" data-map="taychau.jpg" data-name="Tây Châu"/>
-<path d="M350,50 L850,50 L800,200 L400,200 Z"
-class="region" data-map="bacchau.jpg" data-name="Bắc Châu"/>
-<path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z"
-class="region" data-map="dongchau.jpg" data-name="Đông Châu"/>
-<path d="M350,400 L800,400 L850,600 L300,600 Z"
-class="region" data-map="namchau.jpg" data-name="Nam Châu"/>
-<ellipse cx="600" cy="300" rx="120" ry="90"
-class="region" data-map="kinhquoc.jpg" data-name="Kinh Quốc"/>
-</svg>
+<!-- KINH QUỐC -->
+<div class="map-wrap">
+<img src="kinhquoc.jpg" usemap="#kinhquoc">
 </div>
+
+<map name="kinhquoc">
+<area coords="600,240,820,240,830,350,600,350" shape="poly"
+onclick="info('Cung Thái Hòa','Trung tâm quyền lực')">
+
+<area coords="650,360,760,360,760,430,650,430" shape="poly"
+onclick="info('Cổng Nam','Cổng chính')">
+
+<area coords="880,230,1080,240,1080,360,880,360" shape="poly"
+onclick="info('Chợ Đông','Buôn bán lớn')">
+
+<area coords="250,280,420,300,420,400,250,380" shape="poly"
+onclick="info('Chợ Tây','Khu dân sinh')">
+
+<area coords="1020,200,1180,210,1180,300,1020,300" shape="poly"
+onclick="info('Văn Miếu','Học viện')">
+</map>
+
+<!-- ĐÔNG CHÂU -->
+<div class="map-wrap">
+<img src="dongchau.jpg" usemap="#dongchau">
+</div>
+
+<map name="dongchau">
+<area coords="900,300,1150,320,1150,500,900,480" shape="poly"
+onclick="info('Hải Cảng','Trung tâm giao thương')">
+
+<area coords="700,350,880,350,880,520,700,500" shape="poly"
+onclick="info('Pháo Đài Biển','Phòng thủ')">
+
+<area coords="600,250,780,250,780,350,600,350" shape="poly"
+onclick="info('Làng Thổ Cổ','Khu dân cư')">
+
+<area coords="950,520,1150,520,1150,650,950,650" shape="poly"
+onclick="info('Quần Đảo Phượng Hoàng','Linh thiêng')">
+</map>
+
+<!-- NAM CHÂU -->
+<div class="map-wrap">
+<img src="namchau.jpg" usemap="#namchau">
+</div>
+
+<map name="namchau">
+<area coords="500,300,800,300,800,500,500,500" shape="poly"
+onclick="info('Ruộng Lúa','Vựa lúa lớn')">
+
+<area coords="850,350,1100,350,1100,550,850,550" shape="poly"
+onclick="info('Hải Cảng','Giao thương')">
+</map>
+
+<!-- BẮC CHÂU -->
+<div class="map-wrap">
+<img src="bacchau.jpg" usemap="#bacchau">
+</div>
+
+<map name="bacchau">
+<area coords="500,250,750,250,750,400,500,400" shape="poly"
+onclick="info('Hồ Băng Nguyệt','Trung tâm')">
+
+<area coords="800,300,1000,300,1000,500,800,500" shape="poly"
+onclick="info('Vịnh Tuyết Ảnh','Biển băng')">
+
+<area coords="300,300,500,300,500,500,300,500" shape="poly"
+onclick="info('Rừng Tuyết Sâm','Nguy hiểm')">
+
+<area coords="900,500,1150,500,1150,650,900,650" shape="poly"
+onclick="info('Quần đảo Băng','Xa xôi')">
+</map>
+
+<!-- TÂY CHÂU -->
+<div class="map-wrap">
+<img src="taychau.jpg" usemap="#taychau">
+</div>
+
+<map name="taychau">
+<area coords="400,200,900,200,900,450,400,450" shape="poly"
+onclick="info('Hoang Mạc','Sa mạc lớn')">
+
+<area coords="700,450,900,450,900,600,700,600" shape="poly"
+onclick="info('Ốc đảo Xanh','Nguồn sống')">
+
+<area coords="250,350,450,350,450,600,250,600" shape="poly"
+onclick="info('Vạn Lý Gia','Cổ thành')">
+
+<area coords="900,300,1150,300,1150,550,900,550" shape="poly"
+onclick="info('Hải Cảng','Giao thương')">
+</map>
+
+</section>
+
+<!-- NGHỀ -->
+<section id="nghe">
+<h3>Nghề nghiệp</h3>
+
+<div class="job">⚔️ Kiếm Khách</div>
+<div class="job">🏹 Cung Thủ</div>
+<div class="job">🧙 Pháp Sư</div>
+<div class="job">🛡️ Hộ Vệ</div>
+
 </section>
 
 <!-- POPUP -->
-<div id="popup" class="popup">
-
-<span class="close" onclick="closePopup()">✖</span>
-
-<div class="popup-inner">
-
-<div class="map-detail">
-<img id="detailImg">
-<svg id="detailSVG" viewBox="0 0 1000 600"></svg>
+<div class="popup" id="pop">
+<div class="close" onclick="closePop()">✖</div>
+<div class="box">
+<h3 id="title"></h3>
+<p id="desc"></p>
 </div>
-
-<div class="info-box">
-<h3 id="infoTitle">Thông tin</h3>
-<p id="infoDesc">Chọn khu vực...</p>
-</div>
-
-</div>
-
 </div>
 
 <script>
 
 // TAB
-function show(id){
+function tab(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// ===== DATA VẼ CHUẨN =====
-const mapZones = {
-
-"kinhquoc.jpg":[
-{path:"M420,220 L580,220 L600,300 L400,300 Z",title:"Cung Thái Hòa",desc:"Hoàng cung trung tâm"},
-{path:"M450,300 L550,300 L550,380 L450,380 Z",title:"Cổng Nam",desc:"Lối ra chính"},
-{path:"M300,260 L380,260 L380,330 L300,330 Z",title:"Chợ Tây",desc:"Khu buôn bán"},
-{path:"M620,260 L700,260 L700,330 L620,330 Z",title:"Chợ Đông",desc:"Giao thương"}
-],
-
-"dongchau.jpg":[
-{path:"M700,350 L900,350 L900,520 L700,520 Z",title:"Hải Cảng",desc:"Trung tâm giao thương biển"},
-{path:"M550,420 L700,550 L500,550 Z",title:"Thuyền buôn",desc:"Vận chuyển hàng"},
-{path:"M500,250 L650,350 L400,350 Z",title:"Làng Thổ Cổ",desc:"Khu dân cư"}
-],
-
-"namchau.jpg":[
-{path:"M400,300 L650,300 L650,450 L400,450 Z",title:"Ruộng lúa",desc:"Vựa lúa quốc gia"},
-{path:"M650,450 L800,550 L650,550 Z",title:"Làng ven sông",desc:"Dân cư"}
-],
-
-"bacchau.jpg":[
-{path:"M400,250 L600,250 L600,400 L400,400 Z",title:"Thành băng",desc:"Pháo đài"},
-{path:"M600,400 L750,500 L550,500 Z",title:"Làng băng",desc:"Cư dân"}
-],
-
-"taychau.jpg":[
-{path:"M350,300 L650,300 L650,450 L350,450 Z",title:"Sa mạc",desc:"Vùng khô cằn"},
-{path:"M600,450 L750,550 L550,550 Z",title:"Ốc đảo",desc:"Nguồn nước"},
-{path:"M300,250 L400,350 L250,350 Z",title:"Mỏ khoáng",desc:"Tài nguyên"}
-]
-
-};
-
-// CLICK REGION
-document.querySelectorAll(".region").forEach(r=>{
-r.onclick=()=>{
-popup.style.display="flex";
-detailImg.src="./images/"+r.dataset.map;
-
-infoTitle.innerText = r.dataset.name;
-infoDesc.innerText = "Chọn khu vực trong bản đồ...";
-
-renderZones(r.dataset.map);
-}
-});
-
-// RENDER ZONE
-function renderZones(map){
-
-let svg = document.getElementById("detailSVG");
-svg.innerHTML="";
-
-mapZones[map].forEach(z=>{
-
-let p = document.createElementNS("http://www.w3.org/2000/svg","path");
-p.setAttribute("d", z.path);
-p.setAttribute("class","zone");
-
-p.onclick = ()=>{
-infoTitle.innerText = z.title;
-infoDesc.innerText = z.desc;
-};
-
-svg.appendChild(p);
-
-});
-
+// INFO POPUP
+function info(t,d){
+pop.style.display="flex";
+title.innerText=t;
+desc.innerText=d;
 }
 
-function closePopup(){
-popup.style.display="none";
+function closePop(){
+pop.style.display="none";
 }
 
 </script>
