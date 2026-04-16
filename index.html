@@ -85,7 +85,7 @@ section {
 <section id="bando">
   <h2>Bản đồ</h2>
   <div class="map-container">
-    <img src="bandochinh.jpg" alt="Bản đồ">
+    <img src="images/bandochinh.jpg" alt="Bản đồ">
     <div class="area" style="top:20%;left:70%;width:100px;height:100px;" onclick="openMap('dongchau')"></div>
     <div class="area" style="top:10%;left:40%;width:100px;height:100px;" onclick="openMap('bacchau')"></div>
     <div class="area" style="top:40%;left:10%;width:100px;height:100px;" onclick="openMap('taychau')"></div>
@@ -124,7 +124,7 @@ function openMap(region) {
   const detail = document.getElementById('detail');
   detail.innerHTML = `
     <h3>${region}</h3>
-    <img src="${region}.jpg" style="width:100%;max-width:600px;">
+    <img src="images/${region}.jpg" style="width:100%;max-width:600px;">
     <p>Thông tin chi tiết về ${region}...</p>
   `;
 }
