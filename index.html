@@ -34,7 +34,7 @@ header{
   display:block;
 }
 
-/* SVG */
+/* SVG overlay */
 svg{
   position:absolute;
   top:0;
@@ -94,6 +94,12 @@ svg{
   border-radius:12px;
   text-align:center;
   max-width:900px;
+  animation:zoomIn 0.4s ease;
+}
+
+@keyframes zoomIn{
+  from{transform:scale(0.5);opacity:0;}
+  to{transform:scale(1);opacity:1;}
 }
 
 .popup img{
@@ -117,8 +123,10 @@ svg{
 
 <div class="map-container">
 
+<!-- ẢNH CHÍNH -->
 <img src="./images/bandochinh.jpg" id="map" class="map-bg">
 
+<!-- SVG VÙNG -->
 <svg viewBox="0 0 1200 650">
 
 <!-- TÂY CHÂU -->
@@ -190,7 +198,7 @@ document.querySelectorAll(".region").forEach(r => {
     tooltip.style.opacity = 0;
   });
 
-  // CLICK
+  // CLICK → ZOOM + POPUP (KHÔNG CHUYỂN TRANG)
   r.addEventListener("click", ()=>{
 
     let x = r.dataset.x;
@@ -207,14 +215,19 @@ document.querySelectorAll(".region").forEach(r => {
     setTimeout(()=>{
       document.getElementById("popup").style.display="flex";
       document.getElementById("title").innerText = r.dataset.name;
+
+      // ✅ FIX QUAN TRỌNG: ĐÚNG ĐƯỜNG DẪN GITHUB
       document.getElementById("img").src = "./images/" + r.dataset.img;
-      document.getElementById("desc").innerText = "Thông tin về " + r.dataset.name;
+
+      document.getElementById("desc").innerText =
+        "Thông tin về " + r.dataset.name;
     },600);
 
   });
 
 });
 
+// ĐÓNG POPUP
 function closePopup(){
   document.getElementById("popup").style.display="none";
   map.style.transform="scale(1)";
