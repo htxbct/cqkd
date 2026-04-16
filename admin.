@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Admin - Cổ Quốc</title>
+
+<style>
+body{
+  background:#111;
+  color:#fff;
+  font-family:sans-serif;
+  padding:20px;
+}
+
+input{
+  padding:5px;
+  margin:5px;
+}
+
+button{
+  padding:6px 10px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔐 Quản trị tài khoản</h2>
+
+<input id="user" placeholder="Tên tài khoản">
+<input id="pass" placeholder="Mật khẩu">
+<input id="turn" type="number" placeholder="Lượt quay">
+
+<button onclick="create()">Tạo</button>
+
+<h3>Danh sách</h3>
+<ul id="list"></ul>
+
+<script>
+
+let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+
+function create(){
+
+let u = user.value;
+let p = pass.value;
+let t = parseInt(turn.value) || 1;
+
+if(!u || !p) return alert("Nhập đủ thông tin!");
+
+accounts.push({
+user:u,
+pass:p,
+turns:t
+});
+
+localStorage.setItem("accounts", JSON.stringify(accounts));
+
+render();
+}
+
+function render(){
+list.innerHTML="";
+accounts.forEach(a=>{
+list.innerHTML += `<li>${a.user} | lượt: ${a.turns}</li>`;
+});
+}
+
+render();
+
+</script>
+
+</body>
+</html>
