@@ -39,73 +39,109 @@ nav button{
   cursor:pointer;
 }
 
-/* LOGIN */
-.login{
-  text-align:center;
-  padding:10px;
-  background:#2c1b10;
-}
-
-.login input{
-  padding:5px;
-  margin:3px;
-}
-
 /* SECTION */
 section{
   display:none;
   padding:15px;
 }
+
 .active{
   display:block;
 }
 
-/* MAP */
+/* ===== MAP ===== */
 .map-container{
   position:relative;
 }
-.map-bg{ width:100%; }
+
+.map-bg{
+  width:100%;
+}
 
 svg{
   position:absolute;
-  top:0;left:0;
-  width:100%;height:100%;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
 }
 
 .region{
-  fill:transparent;
+  fill: transparent;
   cursor:pointer;
 }
 
-/* JOB */
-.job-list{
+.region:hover{
+  fill: rgba(255,255,255,0.05);
+}
+
+/* ===== JOB UI ===== */
+.job-wrapper{
   display:flex;
-  justify-content:space-around;
-  margin-bottom:20px;
+  gap:15px;
 }
 
-.job-item{
-  padding:10px;
-  border:2px solid #555;
-  border-radius:8px;
-  width:22%;
-  text-align:center;
-  transition:0.3s;
+.job-grid{
+  flex:1;
+  display:grid;
+  grid-template-columns: repeat(2,1fr);
+  gap:10px;
 }
 
-.active-job{
-  border:2px solid gold;
-  box-shadow:0 0 20px gold;
-}
-
-.spin-btn{
-  padding:12px 20px;
-  background:gold;
-  border:none;
+.job-card{
+  height:100px;
+  border-radius:10px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #c9a66b;
+  background-size:cover;
+  background-position:center;
   cursor:pointer;
 }
 
-/* POPUP */
+.job-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+}
+
+.job-card h3{
+  position:absolute;
+  bottom:5px;
+  left:5px;
+  font-size:14px;
+  color:#ffd700;
+  z-index:2;
+}
+
+.job-card:hover{
+  box-shadow:0 0 15px gold;
+}
+
+/* PANEL */
+.job-panel{
+  width:220px;
+  background:#2c1b10;
+  padding:10px;
+  border-radius:10px;
+}
+
+.job-panel h2{
+  color:#ffd700;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.job-wrapper{
+  flex-direction:column;
+}
+.job-panel{
+  width:100%;
+}
+}
+
+/* POPUP MAP */
 .popup{
   position:fixed;
   inset:0;
@@ -133,25 +169,21 @@ svg{
 
 <header>CỔ QUỐC KỲ ĐÀM</header>
 
-<!-- LOGIN -->
-<div class="login">
-<input id="username" placeholder="Tên">
-<input id="password" type="password" placeholder="Mật khẩu">
-<button onclick="login()">Đăng nhập</button>
-<span id="userDisplay"></span>
-</div>
-
 <nav>
 <button onclick="show('tongquan')">Tổng quan</button>
 <button onclick="show('bando')">Bản đồ</button>
-<button onclick="show('nghe')">Quay nghề</button>
-<button onclick="show('luat')">Luật</button>
+<button onclick="show('nghe')">Nghề</button>
 </nav>
 
 <!-- TỔNG QUAN -->
-<section id="tongquan">
+<section id="tongquan" class="active">
 <h2>Tổng quan</h2>
-<p>Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ...</p>
+<p>
+Cổ Quốc được khai sáng bởi Thiên Kiếm Lão Tổ.  
+Trải qua hàng trăm năm phân tranh, quốc gia chia thành các châu:  
+Tây, Đông, Nam, Bắc và trung tâm là Kinh Quốc.  
+Mỗi vùng mang một đặc trưng riêng về văn hóa, kinh tế và quyền lực.
+</p>
 </section>
 
 <!-- BẢN ĐỒ -->
@@ -176,25 +208,36 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 
 <!-- NGHỀ -->
 <section id="nghe">
-<h2>🎲 Quay nghề</h2>
+<h2>Hệ thống nghề nghiệp</h2>
 
-<div class="job-list">
-<div class="job-item" id="job0">Y sư</div>
-<div class="job-item" id="job1">Thương nhân</div>
-<div class="job-item" id="job2">Nông dân</div>
-<div class="job-item" id="job3">Quý tộc</div>
+<div class="job-wrapper">
+
+<div class="job-grid">
+
+<div class="job-card" onclick="openJob('y')" style="background-image:url('./images/y.jpg')">
+<h3>Y sư</h3>
 </div>
 
-<button class="spin-btn" onclick="spinJob()">QUAY</button>
+<div class="job-card" onclick="openJob('t')" style="background-image:url('./images/t.jpg')">
+<h3>Thương nhân</h3>
+</div>
 
-<p id="result"></p>
-<p id="turn"></p>
-</section>
+<div class="job-card" onclick="openJob('n')" style="background-image:url('./images/n.jpg')">
+<h3>Nông dân</h3>
+</div>
 
-<!-- LUẬT -->
-<section id="luat">
-<h2>Luật lệ</h2>
-<p>Các quy tắc của Cổ Quốc...</p>
+<div class="job-card" onclick="openJob('q')" style="background-image:url('./images/q.jpg')">
+<h3>Quý tộc</h3>
+</div>
+
+</div>
+
+<div class="job-panel">
+<h2 id="jobTitle">Chọn nghề</h2>
+<p id="jobDesc">Chọn một nghề để xem mô tả...</p>
+</div>
+
+</div>
 </section>
 
 <!-- POPUP -->
@@ -208,36 +251,10 @@ class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
 
 <script>
 
-// ===== ACCOUNT =====
-let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
-let currentUser = null;
-
-// LOGIN
-function login(){
-let u = username.value;
-let p = password.value;
-
-let acc = accounts.find(a=>a.user===u && a.pass===p);
-
-if(!acc) return alert("Sai tài khoản!");
-
-currentUser = acc;
-userDisplay.innerText = "👤 " + u;
-
-turn.innerText = "Lượt quay: " + acc.turns;
-}
-
 // TAB
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
-localStorage.setItem("page", id);
-}
-
-// LOAD
-window.onload = function(){
-let page = localStorage.getItem("page") || "tongquan";
-show(page);
 }
 
 // MAP
@@ -253,44 +270,33 @@ function closePopup(){
 popup.style.display="none";
 }
 
-// JOB
-const jobs = ["Y sư","Thương nhân","Nông dân","Quý tộc"];
+// JOB INFO
+function openJob(type){
 
-function spinJob(){
+let t="",d="";
 
-if(!currentUser) return alert("Đăng nhập trước!");
-if(currentUser.turns <= 0) return alert("Hết lượt!");
-
-let i=0;
-
-let interval = setInterval(()=>{
-
-document.querySelectorAll(".job-item").forEach(j=>j.classList.remove("active-job"));
-
-document.getElementById("job"+(i%4)).classList.add("active-job");
-
-i++;
-
-if(i>10){
-
-clearInterval(interval);
-
-let resultIndex = Math.floor(Math.random()*4);
-
-document.querySelectorAll(".job-item").forEach(j=>j.classList.remove("active-job"));
-document.getElementById("job"+resultIndex).classList.add("active-job");
-
-result.innerText = "Bạn là: " + jobs[resultIndex];
-
-currentUser.turns--;
-localStorage.setItem("accounts", JSON.stringify(accounts));
-
-turn.innerText = "Lượt quay: " + currentUser.turns;
-
+if(type==="y"){
+t="Y sư";
+d="Cứu thế cứu nạn, chữa bệnh cứu người.";
 }
 
-},150);
+if(type==="t"){
+t="Thương nhân";
+d="Buôn bán khắp thiên hạ, tích lũy tài phú.";
+}
 
+if(type==="n"){
+t="Nông dân";
+d="Lao động sản xuất, nuôi sống quốc gia.";
+}
+
+if(type==="q"){
+t="Quý tộc";
+d="Nắm quyền lực và điều hành quốc gia.";
+}
+
+jobTitle.innerText=t;
+jobDesc.innerText=d;
 }
 
 </script>
