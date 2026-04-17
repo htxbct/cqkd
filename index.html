@@ -5,31 +5,147 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cổ Quốc Kỳ Đàm</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 <style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#f5e6c8;}
-header{text-align:center;padding:15px;font-size:22px;font-weight:bold;color:#ffd700;background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);} 
-nav{display:flex;justify-content:center;background:#5a3d2b;}
-nav button{padding:10px;border:none;color:#ffd700;background:none;cursor:pointer;}
-section{display:none;padding:15px;} .active{display:block;}
-#map{height:80vh;}
+body{
+ margin:0;
+ font-family:'Segoe UI',sans-serif;
+ background:#1a1a1a;
+ color:#f5e6c8;
+}
 
-.popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;justify-content:center;align-items:center;z-index:999;}
-.popup-inner{display:flex;gap:15px;width:95%;max-width:900px;}
-.map-detail{flex:1;}
-.map-detail img{width:100%;}
-.info-box{width:250px;background:#fff8e7;color:#000;padding:10px;border-radius:10px;}
-.close{position:absolute;top:20px;right:30px;font-size:28px;cursor:pointer;color:white;}
+/* HEADER */
+header{
+ text-align:center;
+ padding:15px;
+ font-size:22px;
+ font-weight:bold;
+ color:#ffd700;
+ background:linear-gradient(90deg,#5a3d2b,#c9a66b,#5a3d2b);
+}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
-.card{background:#fff8e7;color:#000;padding:10px;border-radius:10px;}
+/* NAV */
+nav{
+ display:flex;
+ justify-content:center;
+ flex-wrap:wrap;
+ background:#5a3d2b;
+}
+nav button{
+ padding:10px;
+ border:none;
+ color:#ffd700;
+ background:none;
+ cursor:pointer;
+}
+
+/* SECTION */
+section{display:none;padding:15px;}
+.active{display:block;}
+
+/* MAP */
+.map-container{
+ position:relative;
+ overflow:hidden;
+ touch-action:none;
+}
+.map-bg{
+ width:100%;
+ transform-origin:0 0;
+}
+svg{
+ position:absolute;
+ top:0;left:0;
+ width:100%;height:100%;
+}
+
+/* REGION */
+.region{
+ fill:transparent;
+ cursor:pointer;
+}
+.region:hover{
+ fill:rgba(255,215,0,0.3);
+}
+
+/* POPUP */
+.popup{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,0.9);
+ display:none;
+ justify-content:center;
+ align-items:center;
+ z-index:999;
+}
+.popup-inner{
+ display:flex;
+ gap:15px;
+ width:95%;
+ max-width:900px;
+}
+.map-detail{
+ position:relative;
+ flex:1;
+}
+.map-detail img{
+ width:100%;
+ border-radius:10px;
+}
+.map-detail svg{
+ position:absolute;
+ top:0;left:0;
+ width:100%;height:100%;
+}
+.sub-region{
+ fill:transparent;
+ cursor:pointer;
+}
+.sub-region:hover{
+ fill:rgba(255,215,0,0.35);
+}
+
+/* INFO */
+.info-box{
+ width:250px;
+ background:#fff8e7;
+ color:#000;
+ padding:10px;
+ border-radius:10px;
+}
+.close{
+ position:absolute;
+ top:20px;
+ right:30px;
+ font-size:28px;
+ cursor:pointer;
+ color:white;
+}
+
+/* CARDS */
+.cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+ gap:10px;
+}
+.card{
+ background:#fff8e7;
+ color:#000;
+ padding:10px;
+ border-radius:10px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+ .popup-inner{flex-direction:column;}
+ .info-box{width:100%;}
+}
 </style>
 </head>
 
 <body>
+
 <header>CỔ QUỐC KỲ ĐÀM</header>
+
 <nav>
 <button onclick="showTab('tongquan')">Tổng quan</button>
 <button onclick="showTab('bando')">Bản đồ</button>
@@ -42,7 +158,17 @@ section{display:none;padding:15px;} .active{display:block;}
 </section>
 
 <section id="bando">
-<div id="map"></div>
+<div class="map-container" id="mapContainer">
+<img src="./images/bandochinh.jpg" class="map-bg" id="mapImg">
+
+<svg viewBox="0 0 1200 650">
+<path d="M50,200 L350,120 L380,300 L200,450 L80,400 Z" class="region" data-name="Tây Châu" data-img="taychau.jpg"/>
+<path d="M350,50 L850,50 L800,200 L400,200 Z" class="region" data-name="Bắc Châu" data-img="bacchau.jpg"/>
+<path d="M850,150 L1150,200 L1100,500 L900,450 L800,300 Z" class="region" data-name="Đông Châu" data-img="dongchau.jpg"/>
+<path d="M350,400 L800,400 L850,600 L300,600 Z" class="region" data-name="Nam Châu" data-img="namchau.jpg"/>
+<ellipse cx="600" cy="300" rx="120" ry="90" class="region" data-name="Kinh Quốc" data-img="kinhquoc.jpg"/>
+</svg>
+</div>
 </section>
 
 <section id="nghe">
@@ -54,10 +180,16 @@ section{display:none;padding:15px;} .active{display:block;}
 </div>
 </section>
 
+<!-- POPUP -->
 <div id="popup" class="popup">
 <span class="close" onclick="closePopup()">X</span>
+
 <div class="popup-inner">
-<div class="map-detail"><img id="detailImg"></div>
+<div class="map-detail">
+<img id="detailImg">
+<svg id="detailSVG" viewBox="0 0 1500 800"></svg>
+</div>
+
 <div class="info-box">
 <h3 id="infoTitle"></h3>
 <p id="infoDesc"></p>
@@ -66,16 +198,50 @@ section{display:none;padding:15px;} .active{display:block;}
 </div>
 
 <script>
-function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
-const map = L.map('map',{crs:L.CRS.Simple,minZoom:-2,maxZoom:2});
-const bounds=[[0,0],[800,1500]];
-L.imageOverlay('./images/bandochinh.jpg',bounds).addTo(map);
-map.fitBounds(bounds);
+/* TAB */
+function showTab(id){
+ document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+}
 
-// ===== DATA GIỮ NGUYÊN =====
+/* DRAG + ZOOM */
+let scale=1,posX=0,posY=0;
+const img=document.getElementById("mapImg");
+const container=document.getElementById("mapContainer");
+
+container.onwheel=e=>{
+ e.preventDefault();
+ scale+=e.deltaY*-0.001;
+ scale=Math.min(Math.max(1,scale),3);
+ update();
+};
+
+let isDown=false,startX,startY;
+
+container.onmousedown=e=>{
+ isDown=true;
+ startX=e.clientX-posX;
+ startY=e.clientY-posY;
+};
+
+window.onmouseup=()=>isDown=false;
+
+window.onmousemove=e=>{
+ if(!isDown)return;
+ posX=e.clientX-startX;
+ posY=e.clientY-startY;
+ update();
+};
+
+function update(){
+ const transform=`translate(${posX}px,${posY}px) scale(${scale})`;
+ img.style.transform=transform;
+ container.querySelector("svg").style.transform=transform;
+}
+
+/* DATA FULL */
 const maps = {
-
 dongchau:[
 ["820,300 900,270 1020,300 1150,350 1150,500 1000,520 850,480","Hải Cảng","Trung tâm giao thương đường biển"],
 ["720,360 830,360 880,420 840,500 720,480","Pháo Đài Biển","Công trình phòng thủ ven biển"],
@@ -149,57 +315,41 @@ kinhquoc:[
 ["400,450 1000,450 1000,600 400,600","Sông Hằng","Dòng sông"],
 ["350,450 500,450 500,550 350,550","Võ Doanh Sư","Quân sự"]
 ]
-
 };
 
-function parsePoints(str){
- return str.split(" ").map(p=>{
-  let [x,y]=p.split(",").map(Number);
-  return [y,x];
- });
-}
-
-// ===== CHÂU =====
-const regions=[
-{name:"dongchau",label:"Đông Châu",img:"dongchau.jpg",center:[300,1000]},
-{name:"taychau",label:"Tây Châu",img:"taychau.jpg",center:[300,200]},
-{name:"bacchau",label:"Bắc Châu",img:"bacchau.jpg",center:[100,600]},
-{name:"namchau",label:"Nam Châu",img:"namchau.jpg",center:[500,600]},
-{name:"kinhquoc",label:"Kinh Quốc",img:"kinhquoc.jpg",center:[300,700]}
-];
-
-let currentLayer=[];
-
-function clearLayer(){
- currentLayer.forEach(l=>map.removeLayer(l));
- currentLayer=[];
-}
-
-regions.forEach(r=>{
- L.marker(r.center).addTo(map).on('click',()=>{
-  map.setView(r.center,1);
+/* CLICK CHÂU */
+document.querySelectorAll(".region").forEach(r=>{
+ r.onclick=()=>{
   popup.style.display="flex";
-  detailImg.src="./images/"+r.img;
-  infoTitle.innerText=r.label;
-  infoDesc.innerText="Chọn địa điểm trong vùng...";
+  detailImg.src="./images/"+r.dataset.img;
+  detailSVG.innerHTML="";
 
-  clearLayer();
-
-  if(maps[r.name]){
-    maps[r.name].forEach(v=>{
-      const poly=L.polygon(parsePoints(v[0]),{color:'yellow',fillOpacity:0.2}).addTo(map);
-      poly.on('click',()=>{
-        infoTitle.innerText=v[1];
-        infoDesc.innerText=v[2];
-      });
-      currentLayer.push(poly);
-    });
+  let key=r.dataset.img.replace(".jpg","");
+  if(maps[key]){
+   maps[key].forEach(v=>{
+    let poly=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points",v[0]);
+    poly.setAttribute("class","sub-region");
+    poly.onclick=()=>showInfo(v[1],v[2]);
+    detailSVG.appendChild(poly);
+   });
   }
- });
+
+  infoTitle.innerText=r.dataset.name;
+  infoDesc.innerText="Chọn địa điểm trong vùng...";
+ }
 });
 
-function closePopup(){popup.style.display="none";}
+function showInfo(name,desc){
+ infoTitle.innerText=name;
+ infoDesc.innerText=desc;
+}
+
+function closePopup(){
+ popup.style.display="none";
+}
 
 </script>
+
 </body>
 </html>
